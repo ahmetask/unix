@@ -111,7 +111,7 @@ void print_list(struct Account *account) {
     printf("Simulation Days : %d\n", nof_simulation_days);
 
 }
-void* customer(){
+void* customer(void* threadid){
 
     struct Account* account = accounts ;
 
@@ -122,7 +122,8 @@ void* customer(){
 
 
         account->operation_count = account->operation_count+ 1;
-
+        int id = (int)threadid;
+        log_info("customer threadid: %d operation_count:%d a_id:%d ",id, account->operation_count ,account->a_id);
         pthread_mutex_unlock(&account->lock);
         account =account->next;
 
@@ -130,12 +131,14 @@ void* customer(){
 
     //strcpy(customer.action , "view");
 }
-void* teller(){
+void* teller(void* threadid){
     struct Account* account = accounts ;
     while(account!=NULL){
 
         pthread_mutex_lock(&account->lock);
         account->operation_count = account->operation_count+ 1;
+        int id = (int)threadid;
+        log_info("teller threadid: %d operation_count:%d a_id:%d ",id, account->operation_count ,account->a_id);
         pthread_mutex_unlock(&account->lock);
 
         account =account->next;
@@ -144,13 +147,12 @@ void* teller(){
 void create_threads(){
     pthread_t customers[nof_customers];
     pthread_t tellers[nof_tellers];
-
     for(int i = 0 ; i<nof_customers;i++)
-        pthread_create(&customers[i], NULL ,customer ,NULL);
+        pthread_create(&customers[i], NULL ,customer , (void*)i);
 
 
     for(int j = 0 ; j<nof_tellers;j++)
-        pthread_create(&tellers[j], NULL ,teller ,NULL);
+        pthread_create(&tellers[j], NULL ,teller ,(void*)j);
 
     for(int i = 0 ; i<nof_customers ; i++)
         pthread_join(customers[i], NULL);
@@ -158,6 +160,7 @@ void create_threads(){
     for(int i = 0 ; i<nof_tellers ; i++)
         pthread_join(tellers[i], NULL);
 }
+//gcc -o a *.c -lpthread
 int main(){
 
     read_file();

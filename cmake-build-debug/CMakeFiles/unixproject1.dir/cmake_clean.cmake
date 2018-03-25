@@ -1,5 +1,6 @@
 file(REMOVE_RECURSE
   "CMakeFiles/unixproject1.dir/main.c.o"
+  "CMakeFiles/unixproject1.dir/log.c.o"
   "unixproject1.pdb"
   "unixproject1"
 )

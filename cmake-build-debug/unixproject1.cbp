@@ -78,6 +78,12 @@
 				</MakeCommands>
 			</Target>
 		</Build>
+		<Unit filename="/home/ahmet/CLionProjects/unixproject1/log.c">
+			<Option target="unixproject1"/>
+		</Unit>
+		<Unit filename="/home/ahmet/CLionProjects/unixproject1/log.h">
+			<Option target="unixproject1"/>
+		</Unit>
 		<Unit filename="/home/ahmet/CLionProjects/unixproject1/main.c">
 			<Option target="unixproject1"/>
 		</Unit>

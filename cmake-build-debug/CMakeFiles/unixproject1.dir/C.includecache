@@ -6,6 +6,20 @@
 
 #IncludeRegexTransform: 
 
+/home/ahmet/CLionProjects/unixproject1/log.c
+stdio.h
+-
+stdlib.h
+-
+stdarg.h
+-
+string.h
+-
+time.h
+-
+log.h
+/home/ahmet/CLionProjects/unixproject1/log.h
+
 /home/ahmet/CLionProjects/unixproject1/log.h
 stdio.h
 -

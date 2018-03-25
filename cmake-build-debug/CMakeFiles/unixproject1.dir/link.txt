@@ -1,1 +1,1 @@
-/usr/bin/cc -g   CMakeFiles/unixproject1.dir/main.c.o  -o unixproject1 
+/usr/bin/cc -g   CMakeFiles/unixproject1.dir/main.c.o CMakeFiles/unixproject1.dir/log.c.o  -o unixproject1 

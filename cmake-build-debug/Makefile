@@ -123,6 +123,33 @@ unixproject1/fast:
 	$(MAKE) -f CMakeFiles/unixproject1.dir/build.make CMakeFiles/unixproject1.dir/build
 .PHONY : unixproject1/fast
 
+log.o: log.c.o
+
+.PHONY : log.o
+
+# target to build an object file
+log.c.o:
+	$(MAKE) -f CMakeFiles/unixproject1.dir/build.make CMakeFiles/unixproject1.dir/log.c.o
+.PHONY : log.c.o
+
+log.i: log.c.i
+
+.PHONY : log.i
+
+# target to preprocess a source file
+log.c.i:
+	$(MAKE) -f CMakeFiles/unixproject1.dir/build.make CMakeFiles/unixproject1.dir/log.c.i
+.PHONY : log.c.i
+
+log.s: log.c.s
+
+.PHONY : log.s
+
+# target to generate assembly for a file
+log.c.s:
+	$(MAKE) -f CMakeFiles/unixproject1.dir/build.make CMakeFiles/unixproject1.dir/log.c.s
+.PHONY : log.c.s
+
 main.o: main.c.o
 
 .PHONY : main.o
@@ -159,6 +186,9 @@ help:
 	@echo "... rebuild_cache"
 	@echo "... edit_cache"
 	@echo "... unixproject1"
+	@echo "... log.o"
+	@echo "... log.i"
+	@echo "... log.s"
 	@echo "... main.o"
 	@echo "... main.i"
 	@echo "... main.s"
