@@ -1,0 +1,26 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/ahmet/CLionProjects/unixproject1/log.h
+stdio.h
+-
+stdarg.h
+-
+
+/home/ahmet/CLionProjects/unixproject1/main.c
+stdio.h
+-
+memory.h
+-
+stdlib.h
+/home/ahmet/CLionProjects/unixproject1/stdlib.h
+log.h
+/home/ahmet/CLionProjects/unixproject1/log.h
+pthread.h
+/home/ahmet/CLionProjects/unixproject1/pthread.h
+
