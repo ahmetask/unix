@@ -3,6 +3,8 @@
 #include "stdlib.h"
 #include "log.h"
 #include "pthread.h"
+#include <time.h>
+#include <unistd.h>
 
 
 
@@ -20,6 +22,7 @@ typedef struct Account {
 typedef struct Customer{
     int id;
     char action[10];
+    int a_id;
 } Customer;
 
 typedef struct Teller{
@@ -33,9 +36,12 @@ int nof_tellers = 0;
 int nof_simulation_days = 0;
 
 
+int *customer_ids;
+int *account_ids;
 
+FILE * log;
 
-
+int account_size = 0;
 
 void push(struct Account** head_ref, int a_id, int c_id, float amount, int day_limit) {
     struct Account* new_node = (struct Account*) malloc(sizeof(struct Account));
@@ -88,7 +94,10 @@ void read_file(){
     }
 
     fclose(input_file);
+
+
 }
+
 int get_accounts_size(struct Account* item) {
     struct Account* cur = item;
     int size = 0;
@@ -160,12 +169,45 @@ void create_threads(){
     for(int i = 0 ; i<nof_tellers ; i++)
         pthread_join(tellers[i], NULL);
 }
+int get_random_customer_id(){
+    int random = rand() %account_size;
+    return customer_ids[random];
+}
+int get_random_account_id(){
+    int random = rand() % account_size;
+    return account_ids[random];
+}
+void set_ids(){
+    struct Account* account = accounts ;
+    int i = 0;
+    size_t nof_accounts = (size_t)account_size;
+    customer_ids = (int*) calloc(nof_accounts, sizeof(int));
+    account_ids = (int*) calloc(nof_accounts, sizeof(int));
+    while(account!=NULL){
+        account_ids[i] = account->a_id ;
+        customer_ids[i] = account->c_id;
+        i++;
+        account =account->next;
+    }
+}
+void init(){
+    log = fopen("output.txt","w");
+    log_set_fp(log);
+    read_file();
+    account_size = get_accounts_size(accounts);
+    set_ids();
+    create_threads();
+   // print_list(accounts);
+
+}
 //gcc -o a *.c -lpthread
 int main(){
-
-    read_file();
-
-    create_threads();
-    print_list(accounts);
+    init();
+   /* Time stamp
+    * fprintf(stdout, "%lu\n", (unsigned long)time(NULL));
+    sleep(1);
+    fprintf(stdout, "%lu\n", (unsigned long)time(NULL));
+   */
+    fclose(log) ;
     return 0;
 }
