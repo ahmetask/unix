@@ -20,9 +20,11 @@ typedef struct Account {
 } Account;
 
 typedef struct Customer{
-    int id;
-    int action;
-    int a_id;
+    int id; //customer id
+    int action; // action
+    int a_id; //want to access that a_id
+    pthread_mutex_t lock; // in progress
+    struct Customer *next;
 } Customer;
 
 typedef struct Teller{
@@ -32,6 +34,8 @@ typedef struct Teller{
     struct Teller *next;
 } Teller;
 struct Account* accounts = NULL;
+struct Teller* tellers = NULL;
+struct Customer* customers = NULL;
 
 int nof_customers = 0;
 int nof_tellers = 0;
@@ -60,7 +64,23 @@ void push(struct Account** head_ref, int a_id, int c_id, float amount, int day_l
     new_node->next = (*head_ref);
     (*head_ref) = new_node;
 }
-
+void push_teller(struct Teller** head_ref, int id){
+    struct Teller* new_node = (struct Teller*) malloc(sizeof(struct Teller));
+    new_node->id = id ;
+    new_node->action = 0 ; // action 0 read 1 write 2 add 3 sub
+    pthread_mutex_init(&new_node->lock,NULL);
+    new_node->next = (*head_ref);
+    (*head_ref) = new_node ;
+}
+void push_customer(struct Customer** head_ref, int id){
+    struct Customer* new_node = (struct Customer*) malloc(sizeof(struct Customer));
+    new_node->id = id;
+    new_node->action = 0 ; // action 0 read 1 write 2 add 3 sub default 0
+    new_node->a_id = 0 ; //default 0
+    pthread_mutex_init(&new_node->lock,NULL);
+    new_node->next = (*head_ref);
+    (*head_ref) = new_node ;
+}
 void read_file(){
     FILE * input_file;
     char line[51];
@@ -114,7 +134,7 @@ int get_accounts_size(struct Account* item) {
     }
     return size;
 }
-void print_list(struct Account *account) {
+void print_accounts(struct Account *account) {
     while (account != NULL)
     {
         printf("a_id: %d c_id: %d amount: %f day_limit: %d operation_count: %d \n", account->a_id , account->c_id ,
@@ -126,16 +146,28 @@ void print_list(struct Account *account) {
     printf("Simulation Days : %d\n", nof_simulation_days);
 
 }
+void print_customers(struct Customer *customer) {
+    while (customer != NULL)
+    {
+        printf("Customer: id: %d\n" ,customer->id);
+        customer = customer->next;
+    }
+
+}
+void print_tellers(struct Teller *teller) {
+    while (teller != NULL)
+    {
+        printf("teller: id: %d\n" ,teller->id);
+        teller = teller->next;
+    }
+
+}
 void* customer(void* threadid){
 
     struct Account* account = accounts ;
 
     while(account!=NULL){
-
-
         pthread_mutex_lock(&account->lock);
-
-
         account->operation_count = account->operation_count+ 1;
         int id = (int)threadid;
         log_info("customer threadid: %d operation_count:%d a_id:%d ",id, account->operation_count ,account->a_id);
@@ -197,19 +229,38 @@ int get_random_account_id(){
     int random = rand() % account_size;
     return account_ids[random];
 }
+
+int is_in_customer_ids(int id){
+    for(int i = 0 ; i<nof_customers ;i++){
+        if(customer_ids[i]==id){
+            return 1;
+        }
+    }
+    return 0;
+}
+
 void set_ids(){
     struct Account* account = accounts ;
     int i = 0;
     size_t nof_accounts = (size_t)account_size;
-    customer_ids = (int*) calloc(nof_accounts, sizeof(int));
+    customer_ids = (int*) calloc(nof_customers, sizeof(int));
     account_ids = (int*) calloc(nof_accounts, sizeof(int));
+    int j = 0;
     while(account!=NULL){
         account_ids[i] = account->a_id ;
-        customer_ids[i] = account->c_id;
+        if(is_in_customer_ids(account->c_id)==0){
+            customer_ids[j]=account->c_id;
+            push_customer(&customers,account->c_id);
+            j++;
+        }
         i++;
         account =account->next;
     }
+    for(i = 0 ;i<nof_tellers ; i++){
+        push_teller(&tellers,i);
+    }
 }
+
 void init(){
     log = fopen("output.txt","w");
     log_set_fp(log);
@@ -217,9 +268,9 @@ void init(){
     read_file();
     account_size = get_accounts_size(accounts);
     set_ids();
-    create_threads();
-   // print_list(accounts);
-
+    //print_customers(customers);
+    //print_tellers(tellers);
+    //print_accounts(accounts);
 }
 void final(){
     fclose(log);
@@ -228,7 +279,7 @@ void final(){
 //gcc -o a *.c -lpthread
 int main(){
     init();
-
+    create_threads();
     final();
     return 0;
 }
