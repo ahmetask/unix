@@ -21,13 +21,15 @@ typedef struct Account {
 
 typedef struct Customer{
     int id;
-    char action[10];
+    int action;
     int a_id;
 } Customer;
 
 typedef struct Teller{
     int id;
-    char action[10];
+    int action;
+    pthread_mutex_t lock;
+    struct Teller *next;
 } Teller;
 struct Account* accounts = NULL;
 
@@ -43,6 +45,10 @@ FILE * log;
 
 int account_size = 0;
 
+long clock_timestamp =0 ;
+long past_timestamp = 0;
+int stop_clock = 0 ;
+int simulation_day= -1;
 void push(struct Account** head_ref, int a_id, int c_id, float amount, int day_limit) {
     struct Account* new_node = (struct Account*) malloc(sizeof(struct Account));
     new_node->a_id  = a_id;
@@ -137,8 +143,6 @@ void* customer(void* threadid){
         account =account->next;
 
     }
-
-    //strcpy(customer.action , "view");
 }
 void* teller(void* threadid){
     struct Account* account = accounts ;
@@ -153,9 +157,25 @@ void* teller(void* threadid){
         account =account->next;
     }
 }
+void *clock_update(){
+    while(1){
+        clock_timestamp = (unsigned long) time(NULL);
+        if(clock_timestamp-past_timestamp > 10) {
+            simulation_day++;
+            printf("simulation %d\n", simulation_day);
+            past_timestamp = clock_timestamp;
+        }
+
+        if(stop_clock)
+            break;
+
+    }
+}
 void create_threads(){
     pthread_t customers[nof_customers];
     pthread_t tellers[nof_tellers];
+    pthread_t clock_thread;
+    pthread_create(&clock_thread , NULL , clock_update , NULL);
     for(int i = 0 ; i<nof_customers;i++)
         pthread_create(&customers[i], NULL ,customer , (void*)i);
 
@@ -193,6 +213,7 @@ void set_ids(){
 void init(){
     log = fopen("output.txt","w");
     log_set_fp(log);
+    log_set_quiet(1);
     read_file();
     account_size = get_accounts_size(accounts);
     set_ids();
@@ -200,14 +221,14 @@ void init(){
    // print_list(accounts);
 
 }
+void final(){
+    fclose(log);
+    stop_clock=1;
+}
 //gcc -o a *.c -lpthread
 int main(){
     init();
-   /* Time stamp
-    * fprintf(stdout, "%lu\n", (unsigned long)time(NULL));
-    sleep(1);
-    fprintf(stdout, "%lu\n", (unsigned long)time(NULL));
-   */
-    fclose(log) ;
+
+    final();
     return 0;
 }
