@@ -30,6 +30,9 @@ typedef struct Customer{
 typedef struct Teller{
     int id;
     int action;
+    int empty ;
+    int account_id;
+    int customer_id ;
     pthread_mutex_t lock;
     struct Teller *next;
 } Teller;
@@ -68,6 +71,7 @@ void push_teller(struct Teller** head_ref, int id){
     struct Teller* new_node = (struct Teller*) malloc(sizeof(struct Teller));
     new_node->id = id ;
     new_node->action = 0 ; // action 0 read 1 write 2 add 3 sub
+    new_node->empty = 1;
     pthread_mutex_init(&new_node->lock,NULL);
     new_node->next = (*head_ref);
     (*head_ref) = new_node ;
@@ -170,23 +174,40 @@ void* customer(void* threadid){
         pthread_mutex_lock(&account->lock);
         account->operation_count = account->operation_count+ 1;
         int id = (int)threadid;
-        log_info("customer threadid: %d operation_count:%d a_id:%d ",id, account->operation_count ,account->a_id);
+
         pthread_mutex_unlock(&account->lock);
         account =account->next;
 
     }
 }
 void* teller(void* threadid){
-    struct Account* account = accounts ;
-    while(account!=NULL){
 
-        pthread_mutex_lock(&account->lock);
-        account->operation_count = account->operation_count+ 1;
-        int id = (int)threadid;
-        log_info("teller threadid: %d operation_count:%d a_id:%d ",id, account->operation_count ,account->a_id);
-        pthread_mutex_unlock(&account->lock);
+    int id = (int) threadid;
+    Teller* t = get_teller_by_id(id);
 
-        account =account->next;
+    while(1){
+        if(t->empty == 1){
+            Account* a = get_account_by_id(t->account_id);
+            if(t->action==0){
+                //log_info("customer threadid: %d operation_count:%d a_id:%d ",id, account->operation_count ,account->a_id);
+                // view no lock required log file
+            }else if(t->action==1){
+                pthread_mutex_lock(&a->lock);
+                //operation
+                pthread_mutex_unlock(&a->lock);
+            }else if(t->action==2){
+                pthread_mutex_lock(&a->lock);
+                //operation
+                pthread_mutex_unlock(&a->lock);
+            }else{
+                pthread_mutex_lock(&a->lock);
+                //operation
+                pthread_mutex_unlock(&a->lock);
+            }
+        }
+
+        if(simulation_day==nof_simulation_days)
+            break;
     }
 }
 void *clock_update(){
@@ -221,15 +242,42 @@ void create_threads(){
     for(int i = 0 ; i<nof_tellers ; i++)
         pthread_join(tellers[i], NULL);
 }
+int get_random_operation(){
+    int random = rand() % 4;
+    return random;
+}
 int get_random_customer_id(){
-    int random = rand() %account_size;
+    int random = rand() % nof_customers;
     return customer_ids[random];
 }
 int get_random_account_id(){
     int random = rand() % account_size;
     return account_ids[random];
 }
-
+int get_teller_id(){
+    int random = rand() % nof_tellers;
+    return random;
+}
+Account* get_account_by_id(int id){
+    Account* account = accounts ;
+    while(account!=NULL){
+        if(account->a_id == id){
+            return account;
+        }
+        account=account->next;
+    }
+    return NULL;
+}
+Teller* get_teller_by_id(int id){
+    Teller* t = tellers;
+    while(t!=NULL){
+        if(t->id == id){
+            return t;
+        }
+        t=t->next;
+    }
+    return NULL;
+}
 int is_in_customer_ids(int id){
     for(int i = 0 ; i<nof_customers ;i++){
         if(customer_ids[i]==id){
