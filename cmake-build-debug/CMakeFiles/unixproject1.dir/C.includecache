@@ -37,4 +37,8 @@ log.h
 /home/ahmet/CLionProjects/unixproject1/log.h
 pthread.h
 /home/ahmet/CLionProjects/unixproject1/pthread.h
+time.h
+-
+unistd.h
+-
 
