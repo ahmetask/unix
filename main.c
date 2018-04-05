@@ -233,19 +233,19 @@ void* customer(void* threadid){
      *  3. Transfer sub to
      *
      * */
-    log_info("customer %d", customer_id);
+
     while(1){
         int operation = get_random_operation();
         int account = get_random_account_id() ;
         Account* a = get_account_by_customer_id(customer_id);
         int own_account = a->a_id;
         int teller_id = get_teller_id();
-
+        Teller *t ;
         if(teller_id!=-1) {
-            log_info("teller_id %d operation %d", teller_id, operation);
-            Teller *t = get_teller_by_id(teller_id);
 
-            if (operation == 0) {
+            t = get_teller_by_id(teller_id);
+
+            if (operation == 0 ) {
                 pthread_mutex_lock(&t->lock);
                 t->customer_account_id = own_account ;
                 t->customer_id = customer_id;
@@ -253,13 +253,13 @@ void* customer(void* threadid){
                 t->empty =0 ;
 
 
-            } else if (operation == 1) {
+            } else if (operation == 1 && a->operation_count< 3) {
                 pthread_mutex_lock(&t->lock);
 
 
                 t->empty= 0;
 
-            } else if (operation == 2) {
+            } else if (operation == 2  && a->operation_count< 3) {
                 pthread_mutex_lock(&t->lock);
 
 
@@ -270,11 +270,15 @@ void* customer(void* threadid){
 
 
 
+
                 t->empty= 0;
             }
         }
-        if(simulation_day==nof_simulation_days)
+        if(simulation_day==nof_simulation_days){
+            log_info("customer final %", customer_id);
             break;
+        }
+
     }
 }
 
@@ -293,7 +297,6 @@ void* teller(void* threadid){
 
     int id = (int) threadid;
     Teller* t = get_teller_by_id(id);
-    log_info("teller %d", id);
 
     /*
      *  0. View
@@ -308,31 +311,45 @@ void* teller(void* threadid){
             Account* to = get_account_by_id(t->account_id);
             Account* from = get_account_by_id(t->customer_account_id);
 
-            log_info("teller in %d, simulationday %d", id , simulation_day);
-            if(t->action==0){
 
+            if(t->action==0){
+                log_info("teller in %d, customer-id %d simulationday view %d", id ,t->customer_id,simulation_day);
             }else if(t->action==1){
-                pthread_mutex_lock(&to->lock);
+                log_info("teller in %d, customer-id %d simulationday %d", id ,t->customer_id,simulation_day);
+                pthread_mutex_lock(&from->lock);
+                from->operation_count++;
                 //operation
-                pthread_mutex_unlock(&to->lock);
+                pthread_mutex_unlock(&from->lock);
 
             }else if(t->action==2){
-                pthread_mutex_lock(&to->lock);
-                //operation
-                pthread_mutex_unlock(&to->lock);
-            }else{
+                log_info("teller in %d, customer-id %d simulationday %d", id ,t->customer_id,simulation_day);
                 pthread_mutex_lock(&from->lock);
+                from->operation_count++;
                 //operation
+                pthread_mutex_unlock(&from->lock);
+            }else{
+                log_info("teller in %d, customer-id %d simulationday %d", id ,t->customer_id,simulation_day);
+                pthread_mutex_lock(&from->lock);
+                pthread_mutex_lock(&to->lock);
+                if(from->operation_count<3){
+                    from->operation_count++;
+                }
+                pthread_mutex_unlock(&to->lock);
                 pthread_mutex_unlock(&from->lock);
             }
             t->empty = 1;
             pthread_mutex_unlock(&t->lock);
         }
 
-        if(simulation_day==nof_simulation_days)
+        if(simulation_day==nof_simulation_days){
+
+            log_info("teller final %", id);
             break;
+        }
+
     }
 }
+
 void *clock_update(){
     while(1){
         clock_timestamp = (unsigned long) time(NULL);
@@ -342,7 +359,7 @@ void *clock_update(){
             past_timestamp = clock_timestamp;
         }
 
-        if(stop_clock)
+        if(stop_clock==1)
             break;
 
     }
@@ -355,15 +372,17 @@ void create_threads(){
     for(int i = 0 ; i<nof_customers;i++)
         pthread_create(&customers[i], NULL ,customer , (void*)customer_ids[i]);
 
-
     for(int j = 0 ; j<nof_tellers;j++)
         pthread_create(&tellers[j], NULL ,teller ,(void*)j);
+
+
 
     for(int i = 0 ; i<nof_customers ; i++)
         pthread_join(customers[i], NULL);
 
     for(int i = 0 ; i<nof_tellers ; i++)
         pthread_join(tellers[i], NULL);
+
 }
 
 int get_random_customer_id(){
@@ -403,7 +422,7 @@ void set_ids(){
 }
 
 void init(){
-   // log = fopen("output.txt","w");
+    log = fopen("output.txt","w");
     //log_set_fp(log);
     //log_set_quiet(1);
     read_file();
@@ -414,6 +433,7 @@ void init(){
     //print_accounts(accounts);
 }
 void final(){
+    log_info("final");
     fclose(log);
     stop_clock=1;
 }
