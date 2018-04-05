@@ -11,6 +11,7 @@ typedef struct Account {
     int c_id;
     float amount;
     int day_limit;
+    float withdraw_total;
     int operation_count;
     pthread_mutex_t lock;
     struct Account *next;
@@ -32,6 +33,7 @@ typedef struct Teller{
     int account_id;
     int customer_id ;
     int customer_account_id ;
+    float amount ;
     pthread_mutex_t lock;
     struct Teller *next;
 } Teller;
@@ -195,9 +197,27 @@ int get_random_operation(){
     return random;
 }
 
-int get_random_account_id(){
-    int random = rand() % account_size;
-    return account_ids[random];
+int get_random_account_id(int customer_id){
+    Account* account = accounts;
+    int i = 0 ;
+    while (account!=NULL){
+        if(account->c_id != customer_id){
+            i++;
+        }
+        account=account->next;
+    }
+    int* ids = (int*) calloc((size_t) i, sizeof(int));
+    account = accounts;
+    int j =0 ;
+    while (account!=NULL){
+        if(account->c_id != customer_id){
+            ids[j] = account->a_id;
+            j++;
+        }
+        account=account->next;
+    }
+    int random = rand() % i;
+    return ids[random];
 }
 
 int get_teller_id(){
@@ -236,7 +256,7 @@ void* customer(void* threadid){
 
     while(1){
         int operation = get_random_operation();
-        int account = get_random_account_id() ;
+        int account = get_random_account_id(customer_id) ;
         Account* a = get_account_by_customer_id(customer_id);
         int own_account = a->a_id;
         int teller_id = get_teller_id();
@@ -255,26 +275,36 @@ void* customer(void* threadid){
 
             } else if (operation == 1 && a->operation_count< 3) {
                 pthread_mutex_lock(&t->lock);
-
-
+                t->action = 1;
+                t->account_id = account ;
+                t->customer_id = customer_id;
+                t->customer_account_id = own_account;
+                float r = 1000.0;
+                t->amount = (float) ((float)rand() / (float)(RAND_MAX) * r + 5.0);
                 t->empty= 0;
+
 
             } else if (operation == 2  && a->operation_count< 3) {
                 pthread_mutex_lock(&t->lock);
-
-
+                t->action = 2;
+                t->account_id = account ;
+                t->customer_id = customer_id;
+                t->customer_account_id = own_account;
                 t->empty= 0;
 
             } else {
                 pthread_mutex_lock(&t->lock);
-
+                t->action = 3;
+                t->account_id = account ;
+                t->customer_id = customer_id;
+                t->customer_account_id = own_account;
 
 
 
                 t->empty= 0;
             }
         }
-        if(simulation_day==nof_simulation_days){
+        if(simulation_day>=nof_simulation_days){
             log_info("customer final %", customer_id);
             break;
         }
@@ -311,50 +341,61 @@ void* teller(void* threadid){
             Account* to = get_account_by_id(t->account_id);
             Account* from = get_account_by_id(t->customer_account_id);
 
-
             if(t->action==0){
-                log_info("teller in %d, customer-id %d simulationday view %d", id ,t->customer_id,simulation_day);
+                //log_info("teller in %d, customer-id %d accountid %d simulationday %d view", id ,t->customer_id,t->account_id, simulation_day);
             }else if(t->action==1){
-                log_info("teller in %d, customer-id %d simulationday %d", id ,t->customer_id,simulation_day);
-                pthread_mutex_lock(&from->lock);
+                log_info("teller in %d, customer-id %d accountid %d  simulationdayc %d deposit", id ,t->customer_id,t->account_id,simulation_day);
+                 pthread_mutex_lock(&from->lock);
                 from->operation_count++;
                 //operation
                 pthread_mutex_unlock(&from->lock);
 
             }else if(t->action==2){
-                log_info("teller in %d, customer-id %d simulationday %d", id ,t->customer_id,simulation_day);
+                log_info("teller in %d, customer-id %d accountid %d  simulationday %d withdraw", id ,t->customer_id,t->account_id , simulation_day);
                 pthread_mutex_lock(&from->lock);
                 from->operation_count++;
                 //operation
                 pthread_mutex_unlock(&from->lock);
             }else{
-                log_info("teller in %d, customer-id %d simulationday %d", id ,t->customer_id,simulation_day);
+
                 pthread_mutex_lock(&from->lock);
-                pthread_mutex_lock(&to->lock);
                 if(from->operation_count<3){
+                    log_info("teller in %d, customer-id %d accountid %d  toAccountid %d simulationday %d transfer"
+                    , id ,t->customer_id,t->account_id , t->customer_account_id, simulation_day);
                     from->operation_count++;
                 }
-                pthread_mutex_unlock(&to->lock);
                 pthread_mutex_unlock(&from->lock);
+
+                pthread_mutex_lock(&to->lock);
+
+                pthread_mutex_unlock(&to->lock);
             }
             t->empty = 1;
             pthread_mutex_unlock(&t->lock);
         }
 
-        if(simulation_day==nof_simulation_days){
-
+        if(simulation_day>=nof_simulation_days){
+            pthread_mutex_unlock(&t->lock);
             log_info("teller final %", id);
             break;
         }
 
     }
 }
-
+void set_account_operation_count_to_default(){
+    Account* account = accounts;
+    while(account!=NULL){
+        account->operation_count = 0;
+        account->withdraw_total = 0.0;
+        account = account->next;
+    }
+}
 void *clock_update(){
     while(1){
         clock_timestamp = (unsigned long) time(NULL);
         if(clock_timestamp-past_timestamp > 10) {
             simulation_day++;
+            set_account_operation_count_to_default();
             printf("simulation %d\n", simulation_day);
             past_timestamp = clock_timestamp;
         }
@@ -368,7 +409,7 @@ void create_threads(){
     pthread_t customers[nof_customers];
     pthread_t tellers[nof_tellers];
     pthread_t clock_thread;
-    pthread_create(&clock_thread , NULL , clock_update , NULL);
+    pthread_create(&clock_thread , NULL , (void *(*)(void *)) clock_update, NULL);
     for(int i = 0 ; i<nof_customers;i++)
         pthread_create(&customers[i], NULL ,customer , (void*)customer_ids[i]);
 
@@ -403,14 +444,14 @@ void set_ids(){
     struct Account* account = accounts ;
     int i = 0;
     size_t nof_accounts = (size_t)account_size;
-    customer_ids = (int*) calloc(nof_customers, sizeof(int));
+    customer_ids = (int*) calloc((size_t) nof_customers, sizeof(int));
     account_ids = (int*) calloc(nof_accounts, sizeof(int));
     int j = 0;
     while(account!=NULL){
         account_ids[i] = account->a_id ;
         if(is_in_customer_ids(account->c_id)==0){
             customer_ids[j]=account->c_id;
-            push_customer(&customers,account->c_id);
+            //push_customer(&customers,account->c_id);
             j++;
         }
         i++;
