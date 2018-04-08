@@ -76,7 +76,7 @@ void push_teller(struct Teller** head_ref, int id){
     new_node->next = (*head_ref);
     (*head_ref) = new_node ;
 }
-void push_cutomer(struct Customer** head_ref, int id){
+void push_customer(struct Customer** head_ref, int id){
     struct Customer* new_node = (struct Customer*) malloc(sizeof(struct Customer));
     new_node->id = id ;
     new_node->nof_operation_performed = 0;
@@ -402,12 +402,19 @@ void* teller(void* threadid){
                 pthread_mutex_lock(&from->lock);
                 int canTransfer = 0 ;
                 if(from->operation_count<3) {
-                    t->nof_operation_performed++;
-                    customer->nof_operation_performed++;
-                    from->amount = from->amount-t->amount;
-                    from->operation_count++;
-                    canTransfer = 1;
-                    log_info("A_ID:%d C_ID:%d T_ID:%d Operation:%d Amount:%f Simulation_Day:%d",from->a_id,t->customer_id,t->id,t->action,from->amount,simulation_day);
+                    if(from->amount>t->amount){
+                        t->nof_operation_performed++;
+                        customer->nof_operation_performed++;
+
+                        from->amount = from->amount-t->amount;
+                        from->operation_count++;
+                        canTransfer = 1;
+                        log_info("A_ID:%d C_ID:%d T_ID:%d Operation:%d Amount:%f Simulation_Day:%d",from->a_id,t->customer_id,t->id,t->action,from->amount,simulation_day);
+                    } else{
+                        log_info("A_ID:%d C_ID:%d T_ID:%d Amount:%f T_Amount:%f Simulation_Day:%d Cannot transfer that money",from->a_id,
+                                 t->customer_id,t->id,from->amount , t->amount, simulation_day);
+                    }
+
                 }
                 pthread_mutex_unlock(&from->lock);
                 if(canTransfer) {
@@ -485,7 +492,7 @@ void set_ids(){
         account_ids[i] = account->a_id ;
         if(is_in_customer_ids(account->c_id)==0){
             customer_ids[j]=account->c_id;
-            push_cutomer(&customers,customer_ids[j]);
+            push_customer(&customers,customer_ids[j]);
             j++;
         }
         i++;
