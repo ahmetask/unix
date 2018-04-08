@@ -49,7 +49,7 @@ int nof_simulation_days = 0;
 int *customer_ids;
 int *account_ids;
 
-FILE * log;
+FILE* log = NULL;
 
 int account_size = 0;
 
@@ -147,9 +147,6 @@ void print_accounts(struct Account *a) {
                account->amount, account->day_limit,account->operation_count);
         account = account->next;
     }
-    printf("Customer : %d\n", nof_customers);
-    printf("Tellers : %d\n", nof_tellers);
-    printf("Simulation Days : %d\n", nof_simulation_days);
 
 }
 void print_customers(struct Customer *customer) {
@@ -335,56 +332,47 @@ void* teller(void* threadid){
      *
      * */
     while(1){
-        if(t->empty == 0&& simulation_day>=0){
+        if(t->empty == 0 && simulation_day>=0 && simulation_day < nof_simulation_days){
 
             Account* to = get_account_by_id(t->account_id);
             Account* from = get_account_by_id(t->customer_account_id);
-            if(t->action==0 && from->operation_count<3){
-                pthread_mutex_lock(&from->lock);
+            if(t->action==0 ){
 
-                //from->amount++;
-                from->operation_count++;
-                log_info("teller in %d, customer-id %d accountid %d simulationday %d view", id ,t->customer_id,t->account_id, simulation_day);
-                pthread_mutex_unlock(&from->lock);
+                //log_info("teller in %d, customer-id %d accountid %d simulationday %d view", id ,t->customer_id,t->account_id, simulation_day);
 
             }else if(t->action==1 && from->operation_count<3){
 
                 pthread_mutex_lock(&from->lock);
                 log_info("teller in %d, customer-id %d accountid %d  simulationdayc %d deposit", id ,t->customer_id,t->customer_account_id,simulation_day);
-                //from->amount++;
                 from->operation_count++;
-                //operation
                 pthread_mutex_unlock(&from->lock);
 
             }else if(t->action==2 && from->operation_count<3){
 
                 pthread_mutex_lock(&from->lock);
                 from->operation_count++;
+
                 //from->amount--;
                 log_info("teller in %d, customer-id %d accountid %d  simulationday %d withdraw", id ,t->customer_id,t->customer_account_id , simulation_day);
                 pthread_mutex_unlock(&from->lock);
-            }else{
+            }else if(t->action==3 && from->operation_count<3){
 
                 pthread_mutex_lock(&from->lock);
 
-                if(from->operation_count<3 && to->operation_count<3){
-                    log_info("teller in %d, customer-id %d accountid %d  toAccountid %d simulationday %d transfer"
+                log_info("teller in %d, customer-id %d accountid %d  toAccountid %d simulationday %d transfer"
                     , id ,t->customer_id,t->customer_account_id , t->account_id, simulation_day);
                     from->operation_count++;
-                    to->operation_count++;
                     from->amount = from->amount-5;
 
-                }
                 pthread_mutex_unlock(&from->lock);
-                pthread_mutex_lock(&to->lock);
-                if(to->operation_count<3){
-                    to->amount= to->amount+5;
-                    to->operation_count++;
-                }
 
+                pthread_mutex_lock(&to->lock);
+                to->amount= to->amount+5;
                 pthread_mutex_unlock(&to->lock);
             }
             t->empty = 1;
+
+
         }
         if(simulation_day>=nof_simulation_days){
             log_info("teller final %", id);
