@@ -332,11 +332,10 @@ void* customer(void* threadid){
                 pthread_mutex_lock(&t->lock);
                 t->action = 3;
                 t->account_id = account ;
-
-                int j = rand() % 1000 +1;
-                t->amount = j;
                 t->customer_id = customer_id;
                 t->customer_account_id = own_account;
+                int j = rand() % 1000 +1;
+                t->amount = j;
                 t->empty= 0;
                 while (t->done==0)
                     pthread_cond_wait(&t->cv ,&t->lock);
@@ -373,7 +372,7 @@ void* teller(void* threadid){
     char op_transfer[9] = "Transfer";
     while(1){
         if(t->empty == 0 && simulation_day>=0){
-
+            t->done= 0;
             Account* to = get_account_by_id(t->account_id);
             Account* from  = get_account_by_id(t->customer_account_id);
             Customer* customer = get_customer_by_id(t->customer_id);
