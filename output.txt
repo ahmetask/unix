@@ -1,0 +1,161 @@
+2018-04-12 01:28:35 INFO  main.c:495: simulation_day : 0
+2018-04-12 01:28:35 INFO  main.c:383: Before A_ID:2 C_ID:1235 T_ID:0 Operation:View     Amount:2000.000000 Simulation_Day:0
+2018-04-12 01:28:35 INFO  main.c:441: Before A_ID:2 C_ID:1235 T_ID:0 Operation:Transfer Account_Amount:2000.000000 Amount:483.000000 Day:0 To: 3
+2018-04-12 01:28:35 INFO  main.c:450: After A_ID:2 C_ID:1235 T_ID:0 Operation:Transfer Account_Amount:1517.000000 Amount:483.000000 Day:0 To:3
+2018-04-12 01:28:35 INFO  main.c:383: Before A_ID:2 C_ID:1235 T_ID:0 Operation:View     Amount:1517.000000 Simulation_Day:0
+2018-04-12 01:28:35 INFO  main.c:441: Before A_ID:6 C_ID:1235 T_ID:0 Operation:Transfer Account_Amount:6000.000000 Amount:700.000000 Day:0 To: 5
+2018-04-12 01:28:35 INFO  main.c:450: After A_ID:6 C_ID:1235 T_ID:0 Operation:Transfer Account_Amount:5300.000000 Amount:700.000000 Day:0 To:5
+2018-04-12 01:28:35 INFO  main.c:441: Before A_ID:6 C_ID:1235 T_ID:0 Operation:Transfer Account_Amount:5300.000000 Amount:142.000000 Day:0 To: 1
+2018-04-12 01:28:35 INFO  main.c:450: After A_ID:6 C_ID:1235 T_ID:0 Operation:Transfer Account_Amount:5158.000000 Amount:142.000000 Day:0 To:1
+2018-04-12 01:28:35 INFO  main.c:441: Before A_ID:1 C_ID:1234 T_ID:1 Operation:Transfer Account_Amount:1000.000000 Amount:340.000000 Day:0 To: 6
+2018-04-12 01:28:35 INFO  main.c:450: After A_ID:1 C_ID:1234 T_ID:1 Operation:Transfer Account_Amount:660.000000 Amount:340.000000 Day:0 To:6
+2018-04-12 01:28:35 INFO  main.c:441: Before A_ID:4 C_ID:1234 T_ID:1 Operation:Transfer Account_Amount:1000.000000 Amount:985.000000 Day:0 To: 6
+2018-04-12 01:28:35 INFO  main.c:450: After A_ID:4 C_ID:1235 T_ID:1 Operation:Transfer Account_Amount:677.000000 Amount:323.000000 Day:0 To:6
+2018-04-12 01:28:35 INFO  main.c:416: Before A_ID:6 C_ID:1235 T_ID:1 Operation:Withdraw Account_Amount:5821.000000 Amount:150.000000 Simulation_Day:0
+2018-04-12 01:28:35 INFO  main.c:422: After A_ID:6 C_ID:1235 T_ID:1 Operation:Withdraw Account_Amount:5671.000000 Amount:150.000000 Simulation_Day:0
+2018-04-12 01:28:35 INFO  main.c:416: Before A_ID:4 C_ID:1234 T_ID:0 Operation:Withdraw Account_Amount:677.000000 Amount:30.000000 Simulation_Day:0
+2018-04-12 01:28:35 INFO  main.c:422: After A_ID:4 C_ID:1234 T_ID:0 Operation:Withdraw Account_Amount:647.000000 Amount:30.000000 Simulation_Day:0
+2018-04-12 01:28:35 INFO  main.c:383: Before A_ID:3 C_ID:1237 T_ID:0 Operation:View     Amount:4483.000000 Simulation_Day:0
+2018-04-12 01:28:35 INFO  main.c:397: Before A_ID:3 C_ID:1237 T_ID:0 Operation:Deposit  Account_Amount:4483.000000 Amount:20.000000 Simulation_Day:0
+2018-04-12 01:28:35 INFO  main.c:402: After A_ID:3 C_ID:1237 T_ID:0 Operation:Deposit  Account_Amount:4503.000000 Amount:20.000000 Simulation_Day:0
+2018-04-12 01:28:35 INFO  main.c:416: Before A_ID:3 C_ID:1237 T_ID:0 Operation:Withdraw Account_Amount:4503.000000 Amount:75.000000 Simulation_Day:0
+2018-04-12 01:28:35 INFO  main.c:422: After A_ID:3 C_ID:1237 T_ID:0 Operation:Withdraw Account_Amount:4428.000000 Amount:75.000000 Simulation_Day:0
+2018-04-12 01:28:35 INFO  main.c:397: Before A_ID:5 C_ID:1239 T_ID:1 Operation:Deposit  Account_Amount:8950.000000 Amount:510.000000 Simulation_Day:0
+2018-04-12 01:28:35 INFO  main.c:402: After A_ID:5 C_ID:1239 T_ID:1 Operation:Deposit  Account_Amount:9460.000000 Amount:510.000000 Simulation_Day:0
+2018-04-12 01:28:35 INFO  main.c:397: Before A_ID:5 C_ID:1239 T_ID:1 Operation:Deposit  Account_Amount:9460.000000 Amount:160.000000 Simulation_Day:0
+2018-04-12 01:28:35 INFO  main.c:402: After A_ID:5 C_ID:1239 T_ID:1 Operation:Deposit  Account_Amount:9620.000000 Amount:160.000000 Simulation_Day:0
+2018-04-12 01:28:35 INFO  main.c:383: Before A_ID:5 C_ID:1239 T_ID:1 Operation:View     Amount:9620.000000 Simulation_Day:0
+2018-04-12 01:28:35 INFO  main.c:457: A_ID:4 C_ID:1234 T_ID:0 Operation:Transfer-Error Account_Amount:647.000000 Amount:737.000000 Day:0 To: 6
+2018-04-12 01:28:35 INFO  main.c:441: Before A_ID:4 C_ID:1234 T_ID:0 Operation:Transfer Account_Amount:647.000000 Amount:297.000000 Day:0 To: 6
+2018-04-12 01:28:35 INFO  main.c:450: After A_ID:4 C_ID:1234 T_ID:0 Operation:Transfer Account_Amount:350.000000 Amount:297.000000 Day:0 To:6
+2018-04-12 01:28:35 INFO  main.c:441: Before A_ID:1 C_ID:1234 T_ID:0 Operation:Transfer Account_Amount:945.000000 Amount:441.000000 Day:0 To: 2
+2018-04-12 01:28:35 INFO  main.c:450: After A_ID:1 C_ID:1234 T_ID:0 Operation:Transfer Account_Amount:504.000000 Amount:441.000000 Day:0 To:2
+2018-04-12 01:28:35 INFO  main.c:441: Before A_ID:1 C_ID:1234 T_ID:0 Operation:Transfer Account_Amount:504.000000 Amount:189.000000 Day:0 To: 6
+2018-04-12 01:28:35 INFO  main.c:450: After A_ID:1 C_ID:1234 T_ID:0 Operation:Transfer Account_Amount:315.000000 Amount:189.000000 Day:0 To:6
+2018-04-12 01:28:45 INFO  main.c:495: simulation_day : 1
+2018-04-12 01:28:45 INFO  main.c:383: Before A_ID:5 C_ID:1239 T_ID:0 Operation:View     Amount:9620.000000 Simulation_Day:1
+2018-04-12 01:28:45 INFO  main.c:383: Before A_ID:5 C_ID:1239 T_ID:0 Operation:View     Amount:9620.000000 Simulation_Day:1
+2018-04-12 01:28:45 INFO  main.c:416: Before A_ID:5 C_ID:1239 T_ID:0 Operation:Withdraw Account_Amount:9620.000000 Amount:10.000000 Simulation_Day:1
+2018-04-12 01:28:45 INFO  main.c:422: After A_ID:5 C_ID:1239 T_ID:0 Operation:Withdraw Account_Amount:9610.000000 Amount:10.000000 Simulation_Day:1
+2018-04-12 01:28:45 INFO  main.c:383: Before A_ID:3 C_ID:1237 T_ID:0 Operation:View     Amount:4428.000000 Simulation_Day:1
+2018-04-12 01:28:45 INFO  main.c:441: Before A_ID:3 C_ID:1237 T_ID:0 Operation:Transfer Account_Amount:4428.000000 Amount:266.000000 Day:1 To: 5
+2018-04-12 01:28:45 INFO  main.c:450: After A_ID:3 C_ID:1237 T_ID:0 Operation:Transfer Account_Amount:4162.000000 Amount:266.000000 Day:1 To:5
+2018-04-12 01:28:45 INFO  main.c:397: Before A_ID:3 C_ID:1237 T_ID:0 Operation:Deposit  Account_Amount:4162.000000 Amount:895.000000 Simulation_Day:1
+2018-04-12 01:28:45 INFO  main.c:402: After A_ID:3 C_ID:1237 T_ID:0 Operation:Deposit  Account_Amount:5057.000000 Amount:895.000000 Simulation_Day:1
+2018-04-12 01:28:45 INFO  main.c:416: Before A_ID:1 C_ID:1234 T_ID:0 Operation:Withdraw Account_Amount:315.000000 Amount:150.000000 Simulation_Day:1
+2018-04-12 01:28:45 INFO  main.c:422: After A_ID:1 C_ID:1234 T_ID:0 Operation:Withdraw Account_Amount:165.000000 Amount:150.000000 Simulation_Day:1
+2018-04-12 01:28:45 INFO  main.c:426: A_ID:1 C_ID:1234 T_ID:0 Operation:Withdraw-Error Account_Amount:165.000000 Amount:180.000000 Day_limit: 500 Simulation_Day:1
+2018-04-12 01:28:45 INFO  main.c:416: Before A_ID:1 C_ID:1234 T_ID:0 Operation:Withdraw Account_Amount:165.000000 Amount:30.000000 Simulation_Day:1
+2018-04-12 01:28:45 INFO  main.c:422: After A_ID:1 C_ID:1234 T_ID:0 Operation:Withdraw Account_Amount:135.000000 Amount:30.000000 Simulation_Day:1
+2018-04-12 01:28:45 INFO  main.c:457: A_ID:4 C_ID:1234 T_ID:0 Operation:Transfer-Error Account_Amount:350.000000 Amount:602.000000 Day:1 To: 3
+2018-04-12 01:28:45 INFO  main.c:416: Before A_ID:1 C_ID:1234 T_ID:1 Operation:Withdraw Account_Amount:135.000000 Amount:20.000000 Simulation_Day:1
+2018-04-12 01:28:45 INFO  main.c:422: After A_ID:1 C_ID:1234 T_ID:1 Operation:Withdraw Account_Amount:115.000000 Amount:20.000000 Simulation_Day:1
+2018-04-12 01:28:45 INFO  main.c:416: Before A_ID:4 C_ID:1234 T_ID:1 Operation:Withdraw Account_Amount:350.000000 Amount:30.000000 Simulation_Day:1
+2018-04-12 01:28:45 INFO  main.c:422: After A_ID:4 C_ID:1234 T_ID:1 Operation:Withdraw Account_Amount:320.000000 Amount:30.000000 Simulation_Day:1
+2018-04-12 01:28:45 INFO  main.c:416: Before A_ID:4 C_ID:1234 T_ID:1 Operation:Withdraw Account_Amount:320.000000 Amount:160.000000 Simulation_Day:1
+2018-04-12 01:28:45 INFO  main.c:422: After A_ID:4 C_ID:1234 T_ID:1 Operation:Withdraw Account_Amount:160.000000 Amount:160.000000 Simulation_Day:1
+2018-04-12 01:28:45 INFO  main.c:383: Before A_ID:4 C_ID:1234 T_ID:1 Operation:View     Amount:160.000000 Simulation_Day:1
+2018-04-12 01:28:45 INFO  main.c:383: Before A_ID:6 C_ID:1235 T_ID:1 Operation:View     Amount:6157.000000 Simulation_Day:1
+2018-04-12 01:28:45 INFO  main.c:397: Before A_ID:6 C_ID:1235 T_ID:1 Operation:Deposit  Account_Amount:6157.000000 Amount:360.000000 Simulation_Day:1
+2018-04-12 01:28:45 INFO  main.c:402: After A_ID:6 C_ID:1235 T_ID:1 Operation:Deposit  Account_Amount:6517.000000 Amount:360.000000 Simulation_Day:1
+2018-04-12 01:28:45 INFO  main.c:383: Before A_ID:6 C_ID:1234 T_ID:1 Operation:View     Amount:6517.000000 Simulation_Day:1
+2018-04-12 01:28:45 INFO  main.c:416: Before A_ID:2 C_ID:1235 T_ID:1 Operation:Withdraw Account_Amount:1958.000000 Amount:195.000000 Simulation_Day:1
+2018-04-12 01:28:45 INFO  main.c:422: After A_ID:2 C_ID:1235 T_ID:1 Operation:Withdraw Account_Amount:1763.000000 Amount:195.000000 Simulation_Day:1
+2018-04-12 01:28:45 INFO  main.c:441: Before A_ID:2 C_ID:1235 T_ID:1 Operation:Transfer Account_Amount:1763.000000 Amount:186.000000 Day:1 To: 5
+2018-04-12 01:28:45 INFO  main.c:450: After A_ID:2 C_ID:1235 T_ID:1 Operation:Transfer Account_Amount:1577.000000 Amount:186.000000 Day:1 To:5
+2018-04-12 01:28:45 INFO  main.c:383: Before A_ID:2 C_ID:1235 T_ID:1 Operation:View     Amount:1577.000000 Simulation_Day:1
+2018-04-12 01:28:55 INFO  main.c:495: simulation_day : 2
+2018-04-12 01:28:55 INFO  main.c:441: Before A_ID:3 C_ID:1237 T_ID:0 Operation:Transfer Account_Amount:5057.000000 Amount:309.000000 Day:2 To: 6
+2018-04-12 01:28:55 INFO  main.c:450: After A_ID:3 C_ID:1237 T_ID:0 Operation:Transfer Account_Amount:4748.000000 Amount:309.000000 Day:2 To:6
+2018-04-12 01:28:55 INFO  main.c:441: Before A_ID:3 C_ID:1237 T_ID:0 Operation:Transfer Account_Amount:4748.000000 Amount:346.000000 Day:2 To: 6
+2018-04-12 01:28:55 INFO  main.c:450: After A_ID:3 C_ID:1237 T_ID:0 Operation:Transfer Account_Amount:4402.000000 Amount:346.000000 Day:2 To:6
+2018-04-12 01:28:55 INFO  main.c:383: Before A_ID:3 C_ID:1237 T_ID:0 Operation:View     Amount:4402.000000 Simulation_Day:2
+2018-04-12 01:28:55 INFO  main.c:397: Before A_ID:1 C_ID:1234 T_ID:0 Operation:Deposit  Account_Amount:115.000000 Amount:550.000000 Simulation_Day:2
+2018-04-12 01:28:55 INFO  main.c:402: After A_ID:1 C_ID:1234 T_ID:0 Operation:Deposit  Account_Amount:665.000000 Amount:550.000000 Simulation_Day:2
+2018-04-12 01:28:55 INFO  main.c:383: Before A_ID:4 C_ID:1234 T_ID:0 Operation:View     Amount:160.000000 Simulation_Day:2
+2018-04-12 01:28:55 INFO  main.c:383: Before A_ID:4 C_ID:1237 T_ID:0 Operation:View     Amount:160.000000 Simulation_Day:2
+2018-04-12 01:28:55 INFO  main.c:457: A_ID:1 C_ID:1234 T_ID:0 Operation:Transfer-Error Account_Amount:665.000000 Amount:789.000000 Day:2 To: 2
+2018-04-12 01:28:55 INFO  main.c:426: A_ID:4 C_ID:1234 T_ID:0 Operation:Withdraw-Error Account_Amount:160.000000 Amount:165.000000 Day_limit: 200 Simulation_Day:2
+2018-04-12 01:28:55 INFO  main.c:441: Before A_ID:1 C_ID:1237 T_ID:0 Operation:Transfer Account_Amount:665.000000 Amount:35.000000 Day:2 To: 2
+2018-04-12 01:28:55 INFO  main.c:450: After A_ID:1 C_ID:1237 T_ID:0 Operation:Transfer Account_Amount:630.000000 Amount:35.000000 Day:2 To:2
+2018-04-12 01:28:55 INFO  main.c:457: A_ID:1 C_ID:1234 T_ID:0 Operation:Transfer-Error Account_Amount:630.000000 Amount:886.000000 Day:2 To: 6
+2018-04-12 01:28:55 INFO  main.c:383: Before A_ID:1 C_ID:1234 T_ID:0 Operation:View     Amount:630.000000 Simulation_Day:2
+2018-04-12 01:28:55 INFO  main.c:426: A_ID:4 C_ID:1234 T_ID:0 Operation:Withdraw-Error Account_Amount:160.000000 Amount:165.000000 Day_limit: 200 Simulation_Day:2
+2018-04-12 01:28:55 INFO  main.c:416: Before A_ID:4 C_ID:1234 T_ID:0 Operation:Withdraw Account_Amount:160.000000 Amount:40.000000 Simulation_Day:2
+2018-04-12 01:28:55 INFO  main.c:422: After A_ID:4 C_ID:1234 T_ID:0 Operation:Withdraw Account_Amount:120.000000 Amount:40.000000 Simulation_Day:2
+2018-04-12 01:28:55 INFO  main.c:416: Before A_ID:6 C_ID:1235 T_ID:0 Operation:Withdraw Account_Amount:6826.000000 Amount:175.000000 Simulation_Day:2
+2018-04-12 01:28:55 INFO  main.c:422: After A_ID:6 C_ID:1235 T_ID:0 Operation:Withdraw Account_Amount:6651.000000 Amount:175.000000 Simulation_Day:2
+2018-04-12 01:28:55 INFO  main.c:441: Before A_ID:2 C_ID:1235 T_ID:0 Operation:Transfer Account_Amount:1612.000000 Amount:363.000000 Day:2 To: 4
+2018-04-12 01:28:55 INFO  main.c:450: After A_ID:2 C_ID:1235 T_ID:0 Operation:Transfer Account_Amount:1249.000000 Amount:363.000000 Day:2 To:4
+2018-04-12 01:28:55 INFO  main.c:397: Before A_ID:6 C_ID:1234 T_ID:0 Operation:Deposit  Account_Amount:6651.000000 Amount:0.000000 Simulation_Day:2
+2018-04-12 01:28:55 INFO  main.c:402: After A_ID:6 C_ID:1234 T_ID:0 Operation:Deposit  Account_Amount:6651.000000 Amount:0.000000 Simulation_Day:2
+2018-04-12 01:28:55 INFO  main.c:441: Before A_ID:6 C_ID:1235 T_ID:0 Operation:Transfer Account_Amount:6651.000000 Amount:169.000000 Day:2 To: 5
+2018-04-12 01:28:55 INFO  main.c:450: After A_ID:6 C_ID:1235 T_ID:0 Operation:Transfer Account_Amount:6482.000000 Amount:169.000000 Day:2 To:5
+2018-04-12 01:28:55 INFO  main.c:416: Before A_ID:2 C_ID:1235 T_ID:0 Operation:Withdraw Account_Amount:1249.000000 Amount:115.000000 Simulation_Day:2
+2018-04-12 01:28:55 INFO  main.c:422: After A_ID:2 C_ID:1235 T_ID:0 Operation:Withdraw Account_Amount:1134.000000 Amount:115.000000 Simulation_Day:2
+2018-04-12 01:28:55 INFO  main.c:441: Before A_ID:2 C_ID:1235 T_ID:0 Operation:Transfer Account_Amount:1134.000000 Amount:671.000000 Day:2 To: 4
+2018-04-12 01:28:55 INFO  main.c:450: After A_ID:2 C_ID:1235 T_ID:0 Operation:Transfer Account_Amount:463.000000 Amount:671.000000 Day:2 To:4
+2018-04-12 01:28:55 INFO  main.c:397: Before A_ID:5 C_ID:1239 T_ID:0 Operation:Deposit  Account_Amount:10231.000000 Amount:650.000000 Simulation_Day:2
+2018-04-12 01:28:55 INFO  main.c:402: After A_ID:5 C_ID:1239 T_ID:0 Operation:Deposit  Account_Amount:10881.000000 Amount:650.000000 Simulation_Day:2
+2018-04-12 01:28:55 INFO  main.c:397: Before A_ID:5 C_ID:1239 T_ID:0 Operation:Deposit  Account_Amount:10881.000000 Amount:955.000000 Simulation_Day:2
+2018-04-12 01:28:55 INFO  main.c:402: After A_ID:5 C_ID:1239 T_ID:0 Operation:Deposit  Account_Amount:11836.000000 Amount:955.000000 Simulation_Day:2
+2018-04-12 01:28:55 INFO  main.c:441: Before A_ID:5 C_ID:1239 T_ID:0 Operation:Transfer Account_Amount:11836.000000 Amount:755.000000 Day:2 To: 3
+2018-04-12 01:28:55 INFO  main.c:450: After A_ID:5 C_ID:1239 T_ID:0 Operation:Transfer Account_Amount:11081.000000 Amount:755.000000 Day:2 To:3
+2018-04-12 01:29:05 INFO  main.c:495: simulation_day : 3
+2018-04-12 01:29:05 INFO  main.c:441: Before A_ID:3 C_ID:1237 T_ID:0 Operation:Transfer Account_Amount:5157.000000 Amount:820.000000 Day:3 To: 1
+2018-04-12 01:29:05 INFO  main.c:450: After A_ID:3 C_ID:1237 T_ID:0 Operation:Transfer Account_Amount:4337.000000 Amount:820.000000 Day:3 To:1
+2018-04-12 01:29:05 INFO  main.c:397: Before A_ID:4 C_ID:1234 T_ID:0 Operation:Deposit  Account_Amount:1154.000000 Amount:610.000000 Simulation_Day:3
+2018-04-12 01:29:05 INFO  main.c:402: After A_ID:4 C_ID:1234 T_ID:0 Operation:Deposit  Account_Amount:1764.000000 Amount:610.000000 Simulation_Day:3
+2018-04-12 01:29:05 INFO  main.c:441: Before A_ID:3 C_ID:1234 T_ID:1 Operation:Transfer Account_Amount:4337.000000 Amount:0.000000 Day:3 To: 4
+2018-04-12 01:29:05 INFO  main.c:450: After A_ID:3 C_ID:1234 T_ID:1 Operation:Transfer Account_Amount:4337.000000 Amount:0.000000 Day:3 To:4
+2018-04-12 01:29:05 INFO  main.c:441: Before A_ID:1 C_ID:1234 T_ID:1 Operation:Transfer Account_Amount:1450.000000 Amount:160.000000 Day:3 To: 5
+2018-04-12 01:29:05 INFO  main.c:450: After A_ID:1 C_ID:1234 T_ID:1 Operation:Transfer Account_Amount:1290.000000 Amount:160.000000 Day:3 To:5
+2018-04-12 01:29:05 INFO  main.c:397: Before A_ID:4 C_ID:1234 T_ID:1 Operation:Deposit  Account_Amount:1764.000000 Amount:485.000000 Simulation_Day:3
+2018-04-12 01:29:05 INFO  main.c:402: After A_ID:4 C_ID:1234 T_ID:1 Operation:Deposit  Account_Amount:2249.000000 Amount:485.000000 Simulation_Day:3
+2018-04-12 01:29:05 INFO  main.c:441: Before A_ID:3 C_ID:1237 T_ID:0 Operation:Transfer Account_Amount:4337.000000 Amount:478.000000 Day:3 To: 1
+2018-04-12 01:29:05 INFO  main.c:450: After A_ID:3 C_ID:1237 T_ID:0 Operation:Transfer Account_Amount:3859.000000 Amount:478.000000 Day:3 To:1
+2018-04-12 01:29:05 INFO  main.c:416: Before A_ID:1 C_ID:1234 T_ID:0 Operation:Withdraw Account_Amount:1768.000000 Amount:165.000000 Simulation_Day:3
+2018-04-12 01:29:05 INFO  main.c:422: After A_ID:1 C_ID:1234 T_ID:0 Operation:Withdraw Account_Amount:1603.000000 Amount:165.000000 Simulation_Day:3
+2018-04-12 01:29:05 INFO  main.c:441: Before A_ID:4 C_ID:1234 T_ID:0 Operation:Transfer Account_Amount:2249.000000 Amount:652.000000 Day:3 To: 2
+2018-04-12 01:29:05 INFO  main.c:450: After A_ID:4 C_ID:1234 T_ID:0 Operation:Transfer Account_Amount:1597.000000 Amount:652.000000 Day:3 To:2
+2018-04-12 01:29:05 INFO  main.c:383: Before A_ID:1 C_ID:1234 T_ID:1 Operation:View     Amount:1603.000000 Simulation_Day:3
+2018-04-12 01:29:05 INFO  main.c:441: Before A_ID:5 C_ID:1239 T_ID:1 Operation:Transfer Account_Amount:11241.000000 Amount:184.000000 Day:3 To: 1
+2018-04-12 01:29:05 INFO  main.c:450: After A_ID:5 C_ID:1239 T_ID:1 Operation:Transfer Account_Amount:11057.000000 Amount:184.000000 Day:3 To:1
+2018-04-12 01:29:05 INFO  main.c:383: Before A_ID:5 C_ID:1239 T_ID:1 Operation:View     Amount:11057.000000 Simulation_Day:3
+2018-04-12 01:29:05 INFO  main.c:397: Before A_ID:5 C_ID:1239 T_ID:1 Operation:Deposit  Account_Amount:11057.000000 Amount:805.000000 Simulation_Day:3
+2018-04-12 01:29:05 INFO  main.c:402: After A_ID:5 C_ID:1234 T_ID:1 Operation:Deposit  Account_Amount:11815.000000 Amount:758.000000 Simulation_Day:3
+2018-04-12 01:29:05 INFO  main.c:397: Before A_ID:6 C_ID:1235 T_ID:1 Operation:Deposit  Account_Amount:6482.000000 Amount:540.000000 Simulation_Day:3
+2018-04-12 01:29:05 INFO  main.c:402: After A_ID:6 C_ID:1235 T_ID:1 Operation:Deposit  Account_Amount:7022.000000 Amount:540.000000 Simulation_Day:3
+2018-04-12 01:29:05 INFO  main.c:397: Before A_ID:6 C_ID:1237 T_ID:1 Operation:Deposit  Account_Amount:7022.000000 Amount:0.000000 Simulation_Day:3
+2018-04-12 01:29:05 INFO  main.c:402: After A_ID:6 C_ID:1237 T_ID:1 Operation:Deposit  Account_Amount:7022.000000 Amount:0.000000 Simulation_Day:3
+2018-04-12 01:29:05 INFO  main.c:416: Before A_ID:2 C_ID:1235 T_ID:1 Operation:Withdraw Account_Amount:1115.000000 Amount:65.000000 Simulation_Day:3
+2018-04-12 01:29:05 INFO  main.c:422: After A_ID:2 C_ID:1235 T_ID:1 Operation:Withdraw Account_Amount:1050.000000 Amount:65.000000 Simulation_Day:3
+2018-04-12 01:29:05 INFO  main.c:383: Before A_ID:2 C_ID:1235 T_ID:1 Operation:View     Amount:1050.000000 Simulation_Day:3
+2018-04-12 01:29:05 INFO  main.c:441: Before A_ID:2 C_ID:1235 T_ID:1 Operation:Transfer Account_Amount:1050.000000 Amount:309.000000 Day:3 To: 5
+2018-04-12 01:29:05 INFO  main.c:450: After A_ID:2 C_ID:1235 T_ID:1 Operation:Transfer Account_Amount:741.000000 Amount:309.000000 Day:3 To:5
+2018-04-12 01:29:05 INFO  main.c:397: Before A_ID:6 C_ID:1235 T_ID:0 Operation:Deposit  Account_Amount:7022.000000 Amount:840.000000 Simulation_Day:3
+2018-04-12 01:29:05 INFO  main.c:402: After A_ID:6 C_ID:1235 T_ID:0 Operation:Deposit  Account_Amount:7862.000000 Amount:840.000000 Simulation_Day:3
+2018-04-12 01:29:15 INFO  main.c:495: simulation_day : 4
+2018-04-12 01:29:15 INFO  main.c:480: Teller out 1 empty:0 
+2018-04-11 22:29:15 INFO  main.c:480: Teller out 0 empty:0 
+2018-04-12 01:29:15 INFO  main.c:344: Customer finish 1239
+2018-04-12 01:29:15 INFO  main.c:344: Customer finish 1235
+2018-04-12 01:29:15 INFO  main.c:344: Customer finish 1234
+2018-04-12 01:29:15 INFO  main.c:344: Customer finish 1237
+2018-04-12 01:29:15 INFO  main.c:151: a_id: 6 c_id: 1235 amount: 7862.000000 day_limit: 1000 operation_count: 3
+2018-04-12 01:29:15 INFO  main.c:151: a_id: 5 c_id: 1239 amount: 12124.000000 day_limit: 900 operation_count: 3
+2018-04-12 01:29:15 INFO  main.c:151: a_id: 4 c_id: 1234 amount: 1597.000000 day_limit: 200 operation_count: 3
+2018-04-12 01:29:15 INFO  main.c:151: a_id: 3 c_id: 1237 amount: 3859.000000 day_limit: 1500 operation_count: 3
+2018-04-12 01:29:15 INFO  main.c:151: a_id: 2 c_id: 1235 amount: 741.000000 day_limit: 800 operation_count: 3
+2018-04-12 01:29:15 INFO  main.c:151: a_id: 1 c_id: 1234 amount: 1787.000000 day_limit: 500 operation_count: 3
+2018-04-12 01:29:15 INFO  main.c:185: customer:1235 balance:8603.000000
+2018-04-12 01:29:15 INFO  main.c:185: customer:1239 balance:12124.000000
+2018-04-12 01:29:15 INFO  main.c:185: customer:1234 balance:3384.000000
+2018-04-12 01:29:15 INFO  main.c:185: customer:1237 balance:3859.000000
+2018-04-12 01:29:15 INFO  main.c:167: Customer:1237 Number of Operation Performed:12
+2018-04-12 01:29:15 INFO  main.c:167: Customer:1234 Number of Operation Performed:25
+2018-04-12 01:29:15 INFO  main.c:167: Customer:1239 Number of Operation Performed:12
+2018-04-12 01:29:15 INFO  main.c:167: Customer:1235 Number of Operation Performed:23
+2018-04-12 01:29:15 INFO  main.c:159: Teller:1 Number of Operation Performed:28
+2018-04-12 01:29:15 INFO  main.c:159: Teller:0 Number of Operation Performed:44
+2018-04-12 01:29:15 INFO  main.c:584: Total cash:27970.000000
