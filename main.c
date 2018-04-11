@@ -240,7 +240,6 @@ int get_teller_id(){
         if(t->empty==1){
             id = t->id ;
         }
-
         t=t->next;
     }
     return id;
@@ -295,9 +294,9 @@ void* customer(void* threadid){
                 t->customer_account_id = own_account ;
                 t->customer_id = customer_id;
                 t->action = 0 ;
-                t->empty =0;
                 t->amount=0;
-                pthread_mutex_unlock(&t->lock);
+                t->empty =0;
+                //pthread_mutex_unlock(&t->lock);
             } else if (operation == 1) {
                 pthread_mutex_lock(&t->lock);
                 t->action = 1;
@@ -307,7 +306,7 @@ void* customer(void* threadid){
                 int j = ((rand() % 200 +1))*5;
                 t->amount = j;
                 t->empty= 0;
-                pthread_mutex_unlock(&t->lock);
+                //pthread_mutex_unlock(&t->lock);
 
             } else if (operation == 2 ) {
                 pthread_mutex_lock(&t->lock);
@@ -315,24 +314,22 @@ void* customer(void* threadid){
                 t->account_id = account ;
                 t->customer_id = customer_id;
                 t->customer_account_id = own_account;
-
                 int j = ((rand() % 40 +1))*5; // assume min daylimit 200
                 t->amount = j;
-                t->amount =j;
                 t->empty= 0;
-                pthread_mutex_unlock(&t->lock);
+                //pthread_mutex_unlock(&t->lock);
 
             } else if(operation==3 ){
                 pthread_mutex_lock(&t->lock);
                 t->action = 3;
                 t->account_id = account ;
 
-                int j = rand() % 1000;
+                int j = rand() % 1000 +1;
                 t->amount = j;
                 t->customer_id = customer_id;
                 t->customer_account_id = own_account;
                 t->empty= 0;
-                pthread_mutex_unlock(&t->lock);
+                //pthread_mutex_unlock(&t->lock);
             }
         }
 
@@ -365,9 +362,6 @@ void* teller(void* threadid){
     char op_withdraw[9] = "Withdraw";
     char op_transfer[9] = "Transfer";
     while(1){
-        if(simulation_day>=nof_simulation_days){
-            break;
-        }
         if(t->empty == 0 && simulation_day>=0){
             Account* to = get_account_by_id(t->account_id);
             Account* from  = get_account_by_id(t->customer_account_id);
@@ -460,7 +454,14 @@ void* teller(void* threadid){
                     pthread_mutex_unlock(&to->lock);
                 }
             }
+
             t->empty = 1;
+            pthread_mutex_unlock(&t->lock);
+        }
+
+        if(simulation_day>=nof_simulation_days){
+            t->empty = 0;
+            break;
         }
     }
 }

@@ -1,47 +1,47 @@
-2	1235	0	Withdraw	1870.00	0
-5	1239	0	View    	8250.00	0
-5	1235	0	Withdraw	8085.00	0
-5	1239	0	View    	8085.00	0
-1	1239	0	Transfer	405.00	0
-1	1234	0	View    	405.00	0
-1	1239	0	View    	405.00	0
-4	1239	0	Deposit 	1200.00	0
-4	1234	0	Transfer	713.00	0
-2	1235	1	Deposit 	2850.00	0
-4	1234	1	Deposit 	1053.00	0
-2	1235	1	View    	2850.00	0
-6	1235	1	Withdraw	6565.00	0
-6	1235	1	View    	6565.00	0
-6	1235	1	Deposit 	7330.00	0
-3	1237	1	View    	4000.00	0
-3	1239	1	Withdraw	3750.00	0
-3	1237	0	Deposit 	3940.00	0
-4	1234	0	Transfer	489.00	1
-1	1234	0	Transfer	305.00	1
-4	1234	0	View    	489.00	1
-4	1234	0	Deposit 	654.00	1
-1	1234	0	Deposit 	1045.00	1
-1	1234	0	View    	1045.00	1
-5	1239	0	Deposit 	8390.00	1
-5	1239	0	Transfer	7677.00	1
-5	1239	0	View    	7677.00	1
-3	1237	1	Withdraw	3835.00	1
-6	1235	1	Transfer	7162.00	1
-2	1235	1	View    	4150.00	1
-6	1235	1	View    	7162.00	1
-2	1235	1	Transfer	3416.00	1
-2	1235	0	Deposit 	3776.00	1
-6	1235	1	Deposit 	7792.00	1
-3	1237	0	Transfer	3375.00	1
-3	1237	0	Withdraw	3320.00	1
-Customer:1235 Balance:11568.00
-Customer:1239 Balance:8137.00
-Customer:1234 Balance:3165.00
-Customer:1237 Balance:3320.00
+3	1237	0	Deposit 	4025.00	0
+3	1237	0	Deposit 	4830.00	0
+3	1237	0	Deposit 	5710.00	0
+4	1234	0	View    	1000.00	0
+4	1234	0	Transfer	980.00	0
+5	1239	0	Withdraw	8125.00	0
+5	1239	0	Withdraw	8030.00	0
+5	1239	0	Withdraw	7870.00	0
+4	1234	0	View    	980.00	0
+1	1234	0	Deposit 	1980.00	0
+1	1234	0	View    	1980.00	0
+1	1234	0	Deposit 	2010.00	0
+2	1235	0	Transfer	1088.00	0
+2	1235	0	View    	1088.00	0
+6	1235	1	Deposit 	6155.00	0
+6	1235	0	View    	6155.00	0
+6	1235	0	Deposit 	6920.00	0
+2	1235	0	View    	1088.00	0
+6	1235	0	Deposit 	7265.00	1
+6	1235	0	Withdraw	7110.00	1
+2	1235	0	Withdraw	933.00	1
+6	1235	1	View    	7110.00	1
+2	1235	1	Withdraw	838.00	1
+2	1235	1	Withdraw	758.00	1
+1	1234	0	View    	2942.00	1
+4	1234	0	Withdraw	950.00	1
+4	1234	0	Withdraw	790.00	1
+1	1234	1	Withdraw	2847.00	1
+4	1234	0	View    	790.00	1
+1	1234	0	Transfer	2475.00	1
+5	1239	0	Deposit 	8685.00	1
+5	1239	0	Withdraw	8610.00	1
+5	1239	0	Withdraw	8445.00	1
+3	1237	0	Transfer	5423.00	1
+3	1237	0	Transfer	4697.00	1
+3	1237	0	Withdraw	4597.00	1
+Customer:1235 Balance:8527.00
+Customer:1239 Balance:8445.00
+Customer:1234 Balance:3991.00
+Customer:1237 Balance:4597.00
 Customer:1237 #:6
-Customer:1234 #:11
+Customer:1234 #:12
 Customer:1239 #:6
-Customer:1235 #:13
-Teller:1 #:14
-Teller:0 #:22
-Total cash:26190.000000
+Customer:1235 #:12
+Teller:1 #:5
+Teller:0 #:31
+Total cash:25560.00
