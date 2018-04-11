@@ -298,9 +298,9 @@ void* customer(void* threadid){
                 t->customer_account_id = own_account ;
                 t->customer_id = customer_id;
                 t->action = 0 ;
-                t->amount = 0;
                 t->empty =0;
-                while (t->done==0);
+                while (t->done==0)
+                    pthread_cond_wait(&t->cv ,&t->lock);
                 pthread_mutex_unlock(&t->lock);
             } else if (operation == 1  && t->empty==1 ) {
                 pthread_mutex_lock(&t->lock);
@@ -311,7 +311,8 @@ void* customer(void* threadid){
                 int j = ((rand() % 200 +1))*5;
                 t->amount = j;
                 t->empty= 0;
-                while (t->done==0);
+                while (t->done==0)
+                    pthread_cond_wait(&t->cv ,&t->lock);
                 pthread_mutex_unlock(&t->lock);
 
             } else if (operation == 2  && t->empty==1) {
@@ -323,7 +324,8 @@ void* customer(void* threadid){
                 int j = ((rand() % 40 +1))*5; // assume min daylimit 200
                 t->amount = j;
                 t->empty= 0;
-                while (t->done==0);
+                while (t->done==0)
+                    pthread_cond_wait(&t->cv ,&t->lock);
                 pthread_mutex_unlock(&t->lock);
 
             } else if(operation==3 && t->empty==1 ){
@@ -336,7 +338,8 @@ void* customer(void* threadid){
                 t->customer_id = customer_id;
                 t->customer_account_id = own_account;
                 t->empty= 0;
-                while (t->done==0);
+                while (t->done==0)
+                    pthread_cond_wait(&t->cv ,&t->lock);
                 pthread_mutex_unlock(&t->lock);
             }
         }
@@ -384,7 +387,6 @@ void* teller(void* threadid){
                     t->nof_operation_performed++;
                     from->operation_count++;
                     customer->nof_operation_performed++;
-
 
 
                 }
@@ -467,16 +469,18 @@ void* teller(void* threadid){
             }
             t->empty = 1;
             t->done = 1;
-
-            pthread_cond_signal(&t->cv);
+            pthread_cond_signal( &t->cv );
         }
 
-        if(simulation_day>=nof_simulation_days){
-            t->empty =0;
-            t->done = 1;
+        if(simulation_day>=nof_simulation_days ){
+            t->empty = 0;
+
+            pthread_cond_signal( &t->cv );
+
             break;
         }
     }
+
     log_info("Teller out %d empty:%d " ,t->id , t->empty );
 }
 void set_account_operation_count_to_default(){
