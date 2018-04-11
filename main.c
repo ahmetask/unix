@@ -49,6 +49,8 @@ int *customer_ids;
 int *account_ids;
 
 FILE* log_file = NULL;
+FILE* log_output = NULL;
+
 
 int account_size = 0;
 
@@ -56,6 +58,7 @@ long clock_timestamp =0 ;
 long past_timestamp = 0;
 int stop_clock = 0 ;
 int simulation_day= -1;
+
 void push(struct Account** head_ref, int a_id, int c_id, float amount, int day_limit) {
     struct Account* new_node = (struct Account*) malloc(sizeof(struct Account));
     new_node->a_id  = a_id;
@@ -150,6 +153,7 @@ void print_teller(){
     Teller* teller = tellers;
     while(teller!=NULL){
         log_info("Teller:%d Number of Operation Performed:%d", teller->id , teller->nof_operation_performed);
+        fprintf(log_output,"Teller:%d #:%d\n", teller->id, teller->nof_operation_performed);
         teller=teller->next;
     }
 }
@@ -157,6 +161,7 @@ void print_customer(){
     Customer* customer = customers;
     while(customer!=NULL){
         log_info("Customer:%d Number of Operation Performed:%d", customer->id , customer->nof_operation_performed);
+        fprintf(log_output,"Customer:%d #:%d\n", customer->id , customer->nof_operation_performed);
         customer=customer->next;
     }
 }
@@ -174,6 +179,7 @@ float get_current_balance_customer(int customer_id){
 void print_current_balance(){
     for(int i=0; i<nof_customers ; i++){
         log_info("customer:%d balance:%f", customer_ids[i] , get_current_balance_customer(customer_ids[i]));
+        fprintf(log_output,"Customer:%d Balance:%.2f\n",customer_ids[i] ,get_current_balance_customer(customer_ids[i]));
     }
 }
 Account* get_account_by_customer_id(int id){
@@ -290,6 +296,7 @@ void* customer(void* threadid){
                 t->customer_id = customer_id;
                 t->action = 0 ;
                 t->empty =0;
+                t->amount=0;
                 pthread_mutex_unlock(&t->lock);
             } else if (operation == 1) {
                 pthread_mutex_lock(&t->lock);
@@ -320,8 +327,7 @@ void* customer(void* threadid){
                 t->action = 3;
                 t->account_id = account ;
 
-                int amount = (int)a->amount;
-                int j = rand() % amount +1;
+                int j = rand() % 1000;
                 t->amount = j;
                 t->customer_id = customer_id;
                 t->customer_account_id = own_account;
@@ -354,8 +360,8 @@ void* teller(void* threadid){
      *  3. Transfer sub to
      *
      * */
-    char op_view[5] = "View";
-    char op_deposit[8] = "Deposit";
+    char op_view[9]     = "View    ";
+    char op_deposit[9]  = "Deposit ";
     char op_withdraw[9] = "Withdraw";
     char op_transfer[9] = "Transfer";
     while(1){
@@ -377,6 +383,8 @@ void* teller(void* threadid){
                     from->operation_count++;
                     customer->nof_operation_performed++;
 
+                    fprintf(log_output,"%d\t%d\t%d\t%s\t%.2f\t%d\n" , from->a_id ,t->customer_id ,t->id, op_view , from->amount ,simulation_day);
+
                 }
                 pthread_mutex_unlock(&from->lock);
             }else if(t->action==1 ){
@@ -389,8 +397,8 @@ void* teller(void* threadid){
                     from->operation_count++;
                     customer->nof_operation_performed++;
                     from->amount = from->amount + t->amount;
-
                     log_info("After A_ID:%d C_ID:%d T_ID:%d Operation:%s Account_Amount:%f Amount:%f Simulation_Day:%d",from->a_id,t->customer_id,t->id,op_deposit,from->amount,t->amount , simulation_day);
+                    fprintf(log_output,"%d\t%d\t%d\t%s\t%.2f\t%d\n" , from->a_id ,t->customer_id ,t->id, op_deposit , from->amount ,simulation_day);
 
                 }
                 pthread_mutex_unlock(&from->lock);
@@ -409,7 +417,7 @@ void* teller(void* threadid){
                         t->nof_operation_performed++;
                         customer->nof_operation_performed++;
                         log_info("After A_ID:%d C_ID:%d T_ID:%d Operation:%s Account_Amount:%f Amount:%f Simulation_Day:%d",from->a_id,t->customer_id,t->id,op_withdraw,from->amount,t->amount,simulation_day);
-
+                        fprintf(log_output,"%d\t%d\t%d\t%s\t%.2f\t%d\n" , from->a_id ,t->customer_id ,t->id, op_withdraw , from->amount,simulation_day);
 
                     } else {
                         log_info("A_ID:%d C_ID:%d T_ID:%d Operation:%s-Error Account_Amount:%f Amount:%f Day_limit: %d Simulation_Day:%d",from->a_id,t->customer_id,t->id,op_withdraw,from->amount,t->amount,from->day_limit,simulation_day);
@@ -431,9 +439,12 @@ void* teller(void* threadid){
                         from->amount = from->amount - t->amount;
                         from->operation_count++;
                         canTransfer = 1;
+
                         log_info("After A_ID:%d C_ID:%d T_ID:%d Operation:%s Account_Amount:%f Amount:%f Day:%d To:%d",
                                  from->a_id, t->customer_id, t->id, op_transfer, from->amount, t->amount,
                                  simulation_day,to->a_id);
+
+                        fprintf(log_output,"%d\t%d\t%d\t%s\t%.2f\t%d\n" , from->a_id ,t->customer_id ,t->id, op_transfer ,from->amount ,simulation_day);
                     } else {
                         log_info(
                                 "A_ID:%d C_ID:%d T_ID:%d Operation:%s-Error Account_Amount:%f Amount:%f Day:%d To: %d",
@@ -527,8 +538,10 @@ void set_ids(){
     }
 }
 void init(){
-    srand(time(NULL));
+    srand((unsigned int) time(NULL));
     log_file = fopen("output.txt","w");
+
+    log_output = fopen ("log.txt", "w");
     log_set_fp(log_file);
     //log_set_quiet(1);
     read_file();
@@ -538,17 +551,19 @@ void init(){
 }
 void final(){
     fclose(log_file);
+    fclose(log_output);
     stop_clock=1;
 }
 //gcc -o a *.c -lpthread
 int main(){
     init();
     create_threads();
-    print_accounts(accounts);
+   // print_accounts(accounts);
     print_current_balance();
     print_customer();
     print_teller();
     log_info("Total cash:%f",get_total_cash());
+    fprintf(log_output,"Total cash:%.2f", get_total_cash());
     final();
     return 0;
 }
