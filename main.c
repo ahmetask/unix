@@ -361,6 +361,7 @@ void* teller(void* threadid){
     char op_deposit[9]  = "Deposit ";
     char op_withdraw[9] = "Withdraw";
     char op_transfer[9] = "Transfer";
+    int pre_exit = 0;
     while(1){
         if(t->empty == 0 && simulation_day>=0){
             Account* to = get_account_by_id(t->account_id);
@@ -460,10 +461,19 @@ void* teller(void* threadid){
         }
 
         if(simulation_day>=nof_simulation_days){
-            t->empty = 0;
+            t->empty =0;
             break;
         }
     }
+
+
+    log_info("t:%d  empty: %d", t->id ,t->empty);
+    if(pthread_mutex_trylock(&t->lock)!=0){
+        log_info("t:%d locked empty: %d", t->id ,t->empty);
+        t->empty= 0;
+        pthread_mutex_unlock(&t->lock);
+    }
+
 }
 void set_account_operation_count_to_default(){
     Account* account = accounts;
@@ -479,8 +489,12 @@ void* clock_update(){
         if(clock_timestamp-past_timestamp > 9) {
             simulation_day++;
             log_info("simulation_day : %d" ,simulation_day);
-            set_account_operation_count_to_default();
+            if(simulation_day<nof_simulation_days)
+                set_account_operation_count_to_default();
             past_timestamp = clock_timestamp;
+        }
+        if(simulation_day>=nof_simulation_days){
+            break;
         }
         if(stop_clock==1)
             break;
