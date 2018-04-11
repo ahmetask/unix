@@ -284,15 +284,14 @@ void* customer(void* threadid){
         if(teller_id!=-1) {
 
             t = get_teller_by_id(teller_id);
-            if (operation == 0) {
+            if (operation == 0 ) {
                 pthread_mutex_lock(&t->lock);
                 t->customer_account_id = own_account ;
                 t->customer_id = customer_id;
                 t->action = 0 ;
                 t->empty =0;
                 pthread_mutex_unlock(&t->lock);
-
-            } else if (operation == 1 ) {
+            } else if (operation == 1) {
                 pthread_mutex_lock(&t->lock);
                 t->action = 1;
                 t->account_id = account ;
@@ -316,7 +315,7 @@ void* customer(void* threadid){
                 t->empty= 0;
                 pthread_mutex_unlock(&t->lock);
 
-            } else {
+            } else if(operation==3 ){
                 pthread_mutex_lock(&t->lock);
                 t->action = 3;
                 t->account_id = account ;
@@ -363,7 +362,7 @@ void* teller(void* threadid){
         if(simulation_day>=nof_simulation_days){
             break;
         }
-        if(t->empty == 0 && simulation_day>=0 && simulation_day < nof_simulation_days){
+        if(t->empty == 0 && simulation_day>=0){
             Account* to = get_account_by_id(t->account_id);
             Account* from  = get_account_by_id(t->customer_account_id);
             Customer* customer = get_customer_by_id(t->customer_id);
@@ -413,7 +412,7 @@ void* teller(void* threadid){
 
 
                     } else {
-                        log_info("A_ID:%d C_ID:%d T_ID:%d Operation:%s-Error Account_Amount:%f Amount:%f Simulation_Day:%d",from->a_id,t->customer_id,t->id,op_withdraw,from->amount,t->amount,simulation_day);
+                        log_info("A_ID:%d C_ID:%d T_ID:%d Operation:%s-Error Account_Amount:%f Amount:%f Day_limit: %d Simulation_Day:%d",from->a_id,t->customer_id,t->id,op_withdraw,from->amount,t->amount,from->day_limit,simulation_day);
                     }
                 }
                 pthread_mutex_unlock(&from->lock);
@@ -424,22 +423,22 @@ void* teller(void* threadid){
                 if (from->operation_count < 3  && simulation_day<nof_simulation_days) {
 
                     if (from->amount > t->amount) {
-                        log_info("Before A_ID:%d C_ID:%d T_ID:%d Operation:%s Account_Amount:%f Amount:%f Simulation_Day:%d",
+                        log_info("Before A_ID:%d C_ID:%d T_ID:%d Operation:%s Account_Amount:%f Amount:%f Day:%d To: %d",
                                  from->a_id, t->customer_id, t->id, op_transfer, from->amount, t->amount,
-                                 simulation_day);
+                                 simulation_day,to->a_id);
                         t->nof_operation_performed++;
                         customer->nof_operation_performed++;
                         from->amount = from->amount - t->amount;
                         from->operation_count++;
                         canTransfer = 1;
-                        log_info("After A_ID:%d C_ID:%d T_ID:%d Operation:%s Account_Amount:%f Amount:%f Simulation_Day:%d",
+                        log_info("After A_ID:%d C_ID:%d T_ID:%d Operation:%s Account_Amount:%f Amount:%f Day:%d To:%d",
                                  from->a_id, t->customer_id, t->id, op_transfer, from->amount, t->amount,
-                                 simulation_day);
+                                 simulation_day,to->a_id);
                     } else {
                         log_info(
-                                "A_ID:%d C_ID:%d T_ID:%d Operation:%s-Error Account_Amount:%f Amount:%f Simulation_Day:%d",
+                                "A_ID:%d C_ID:%d T_ID:%d Operation:%s-Error Account_Amount:%f Amount:%f Day:%d To: %d",
                                 from->a_id, t->customer_id, t->id, op_transfer, from->amount, t->amount,
-                                simulation_day);
+                                simulation_day,to->a_id);
                     }
 
                 }
@@ -450,7 +449,6 @@ void* teller(void* threadid){
                     pthread_mutex_unlock(&to->lock);
                 }
             }
-
             t->empty = 1;
         }
     }
@@ -466,8 +464,9 @@ void set_account_operation_count_to_default(){
 void* clock_update(){
     while(1){
         clock_timestamp = (unsigned long) time(NULL);
-        if(clock_timestamp-past_timestamp > 10) {
+        if(clock_timestamp-past_timestamp > 9) {
             simulation_day++;
+            log_info("simulation_day : %d" ,simulation_day);
             set_account_operation_count_to_default();
             past_timestamp = clock_timestamp;
         }
