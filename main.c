@@ -4,7 +4,8 @@
 #include "log.h"
 #include <pthread.h>
 #include <stdint.h>
-
+#include <time.h>
+#include <unistd.h>
 typedef struct Account {
     int a_id;
     int c_id;
@@ -354,6 +355,10 @@ void* teller(void* threadid){
      *  3. Transfer sub to
      *
      * */
+    char op_view[5] = "View";
+    char op_deposit[8] = "Deposit";
+    char op_withdraw[9] = "Withdraw";
+    char op_transfer[9] = "Transfer";
     while(1){
         if(simulation_day>=nof_simulation_days){
             break;
@@ -363,18 +368,31 @@ void* teller(void* threadid){
             Account* from  = get_account_by_id(t->customer_account_id);
             Customer* customer = get_customer_by_id(t->customer_id);
             if(t->action==0 ) {
-               // log_info("A_ID:%d C_ID:%d T_ID:%d Operation:%d Amount:%f Simulation_Day:%d",from->a_id,t->customer_id,t->id,t->action,from->amount,simulation_day);
-               // t->nof_operation_performed++;
-                //customer->nof_operation_performed++;
+                pthread_mutex_lock(&from->lock);
+
+                if (from->operation_count < 3 && simulation_day<nof_simulation_days) {
+
+                    log_info("Before A_ID:%d C_ID:%d T_ID:%d Operation:%s Amount:%f Simulation_Day:%d", from->a_id,
+                             t->customer_id, t->id, op_view, from->amount, simulation_day);
+                    t->nof_operation_performed++;
+                    from->operation_count++;
+                    customer->nof_operation_performed++;
+
+                }
+                pthread_mutex_unlock(&from->lock);
             }else if(t->action==1 ){
                 pthread_mutex_lock(&from->lock);
 
-                if(from->operation_count<3) {
+                if(from->operation_count<3  && simulation_day<nof_simulation_days) {
+
+                    log_info("Before A_ID:%d C_ID:%d T_ID:%d Operation:%s Account_Amount:%f Amount:%f Simulation_Day:%d",from->a_id,t->customer_id,t->id,op_deposit,from->amount,t->amount , simulation_day);
                     t->nof_operation_performed++;
                     from->operation_count++;
                     customer->nof_operation_performed++;
                     from->amount = from->amount + t->amount;
-                    log_info("A_ID:%d C_ID:%d T_ID:%d Operation:%d Amount:%f Simulation_Day:%d",from->a_id,t->customer_id,t->id,t->action,from->amount,simulation_day);
+
+                    log_info("After A_ID:%d C_ID:%d T_ID:%d Operation:%s Account_Amount:%f Amount:%f Simulation_Day:%d",from->a_id,t->customer_id,t->id,op_deposit,from->amount,t->amount , simulation_day);
+
                 }
                 pthread_mutex_unlock(&from->lock);
 
@@ -382,42 +400,51 @@ void* teller(void* threadid){
 
                 pthread_mutex_lock(&from->lock);
 
-                if(from->operation_count<3) {
+                if(from->operation_count<3  && simulation_day<nof_simulation_days) {
 
-                    t->nof_operation_performed++;
-                    customer->nof_operation_performed++;
-                    if (from->withdraw_total + t->amount < from->day_limit) {
+                    if (from->withdraw_total + t->amount < from->day_limit && t->amount<from->amount) {
+                        log_info("Before A_ID:%d C_ID:%d T_ID:%d Operation:%s Account_Amount:%f Amount:%f Simulation_Day:%d",from->a_id,t->customer_id,t->id,op_withdraw,from->amount,t->amount,simulation_day);
                         from->amount = from->amount - t->amount;
                         from->withdraw_total += t->amount;
                         from->operation_count++;
-                        log_info("A_ID:%d C_ID:%d T_ID:%d Operation:%d Amount:%f Simulation_Day:%d",from->a_id,t->customer_id,t->id,t->action,from->amount,simulation_day);
-                    } else {
-                        log_info("A_ID:%d C_ID:%d T_ID:%d Simulation_Day:%d Withdraw limit reached",from->a_id,
-                        t->customer_id,t->id, simulation_day);
-                    }
-                }
-                pthread_mutex_unlock(&from->lock);
-            }else if(t->action==3){
-
-                pthread_mutex_lock(&from->lock);
-                int canTransfer = 0 ;
-                if(from->operation_count<3) {
-                    if(from->amount>t->amount){
                         t->nof_operation_performed++;
                         customer->nof_operation_performed++;
+                        log_info("After A_ID:%d C_ID:%d T_ID:%d Operation:%s Account_Amount:%f Amount:%f Simulation_Day:%d",from->a_id,t->customer_id,t->id,op_withdraw,from->amount,t->amount,simulation_day);
 
-                        from->amount = from->amount-t->amount;
+
+                    } else {
+                        log_info("A_ID:%d C_ID:%d T_ID:%d Operation:%s-Error Account_Amount:%f Amount:%f Simulation_Day:%d",from->a_id,t->customer_id,t->id,op_withdraw,from->amount,t->amount,simulation_day);
+                    }
+                }
+                pthread_mutex_unlock(&from->lock);
+            }else if(t->action==3) {
+
+                pthread_mutex_lock(&from->lock);
+                int canTransfer = 0;
+                if (from->operation_count < 3  && simulation_day<nof_simulation_days) {
+
+                    if (from->amount > t->amount) {
+                        log_info("Before A_ID:%d C_ID:%d T_ID:%d Operation:%s Account_Amount:%f Amount:%f Simulation_Day:%d",
+                                 from->a_id, t->customer_id, t->id, op_transfer, from->amount, t->amount,
+                                 simulation_day);
+                        t->nof_operation_performed++;
+                        customer->nof_operation_performed++;
+                        from->amount = from->amount - t->amount;
                         from->operation_count++;
                         canTransfer = 1;
-                        log_info("A_ID:%d C_ID:%d T_ID:%d Operation:%d Amount:%f Simulation_Day:%d",from->a_id,t->customer_id,t->id,t->action,from->amount,simulation_day);
-                    } else{
-                        log_info("A_ID:%d C_ID:%d T_ID:%d Amount:%f T_Amount:%f Simulation_Day:%d Cannot transfer that money",from->a_id,
-                                 t->customer_id,t->id,from->amount , t->amount, simulation_day);
+                        log_info("After A_ID:%d C_ID:%d T_ID:%d Operation:%s Account_Amount:%f Amount:%f Simulation_Day:%d",
+                                 from->a_id, t->customer_id, t->id, op_transfer, from->amount, t->amount,
+                                 simulation_day);
+                    } else {
+                        log_info(
+                                "A_ID:%d C_ID:%d T_ID:%d Operation:%s-Error Account_Amount:%f Amount:%f Simulation_Day:%d",
+                                from->a_id, t->customer_id, t->id, op_transfer, from->amount, t->amount,
+                                simulation_day);
                     }
 
                 }
                 pthread_mutex_unlock(&from->lock);
-                if(canTransfer) {
+                if (canTransfer == 1) {
                     pthread_mutex_lock(&to->lock);
                     to->amount = to->amount + t->amount;
                     pthread_mutex_unlock(&to->lock);
@@ -426,8 +453,6 @@ void* teller(void* threadid){
 
             t->empty = 1;
         }
-
-
     }
 }
 void set_account_operation_count_to_default(){
@@ -454,7 +479,7 @@ void create_threads(){
     pthread_t customers[nof_customers];
     pthread_t tellers[nof_tellers];
     pthread_t clock_thread;
-    pthread_create(&clock_thread , NULL , clock_update, NULL);
+    pthread_create(&clock_thread , NULL , (void *(*)(void *)) clock_update, NULL);
 
     for(int j = 0 ; j<nof_tellers;j++)
         if( pthread_create(&tellers[j], NULL, teller, (void *)(intptr_t) j)!=0)
@@ -503,12 +528,14 @@ void set_ids(){
     }
 }
 void init(){
+    srand(time(NULL));
     log_file = fopen("output.txt","w");
     log_set_fp(log_file);
     //log_set_quiet(1);
     read_file();
     account_size = get_accounts_size(accounts);
     set_ids();
+
 }
 void final(){
     fclose(log_file);
@@ -518,10 +545,11 @@ void final(){
 int main(){
     init();
     create_threads();
-    final();
+    print_accounts(accounts);
     print_current_balance();
     print_customer();
     print_teller();
     log_info("Total cash:%f",get_total_cash());
+    final();
     return 0;
 }
