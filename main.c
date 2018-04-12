@@ -36,6 +36,7 @@ typedef struct Teller{
     int done;
     pthread_cond_t cv;
     pthread_mutex_t lock;
+    pthread_mutex_t in_lock;
     struct Teller *next;
 } Teller;
 struct Account* accounts = NULL;
@@ -81,6 +82,7 @@ void push_teller(struct Teller** head_ref, int id){
     new_node->nof_operation_performed = 0;
     new_node->done= 0;
     pthread_mutex_init(&new_node->lock,NULL);
+    pthread_mutex_init(&new_node->in_lock,NULL);
     new_node->next = (*head_ref);
     (*head_ref) = new_node ;
 }
@@ -243,6 +245,7 @@ int get_teller_id(){
     while(t!=NULL){
         if(t->empty==1){
             id = t->id ;
+            break;
         }
         t=t->next;
     }
@@ -371,7 +374,9 @@ void* teller(void* threadid){
     char op_withdraw[9] = "Withdraw";
     char op_transfer[9] = "Transfer";
     while(1){
+
         if(t->empty == 0 && simulation_day>=0){
+            pthread_mutex_lock(&t->lock);
             t->done= 0;
             Account* to = get_account_by_id(t->account_id);
             Account* from  = get_account_by_id(t->customer_account_id);
@@ -466,11 +471,12 @@ void* teller(void* threadid){
                     pthread_mutex_unlock(&to->lock);
                 }
             }
-            t->empty = 1;
+
             t->done = 1;
             pthread_cond_signal( &t->cv );
+            t->empty = 1;
+            pthread_mutex_unlock(&t->lock);
         }
-
         if(simulation_day>=nof_simulation_days ){
             t->empty = 0;
 
