@@ -301,6 +301,7 @@ void* customer(void* threadid){
                 t->customer_account_id = own_account ;
                 t->customer_id = customer_id;
                 t->action = 0 ;
+                t->amount = 0;
                 t->empty =0;
                 while (t->done==0)
                     pthread_cond_wait(&t->cv ,&t->lock);
@@ -385,7 +386,7 @@ void* teller(void* threadid){
                 pthread_mutex_lock(&from->lock);
 
                 if (from->operation_count < 3 && simulation_day<nof_simulation_days) {
-                    fprintf(log_output,"%d\t%d\t%d\t%s\t%.2f\t%d\n" , from->a_id ,t->customer_id ,t->id, op_view , from->amount ,simulation_day);
+                    fprintf(log_output,"A_ID:%06d\tC_ID:%06d\tT_ID:%06d\tOperation:%s\tA_Amount:%09.2f\tO_Amount:%09.2f\tDay:%06d\n" , from->a_id ,t->customer_id ,t->id, op_view , from->amount ,t->amount,simulation_day);
                     log_info("Before A_ID:%d C_ID:%d T_ID:%d Operation:%s Amount:%f Simulation_Day:%d", from->a_id,
                              t->customer_id, t->id, op_view, from->amount, simulation_day);
                     t->nof_operation_performed++;
@@ -399,7 +400,7 @@ void* teller(void* threadid){
                 pthread_mutex_lock(&from->lock);
 
                 if(from->operation_count<3  && simulation_day<nof_simulation_days) {
-                    fprintf(log_output,"%d\t%d\t%d\t%s\t%.2f\t%d\n" , from->a_id ,t->customer_id ,t->id, op_deposit , from->amount ,simulation_day);
+                    fprintf(log_output,"A_ID:%06d\tC_ID:%06d\tT_ID:%06d\tOperation:%s\tA_Amount:%09.2f\tO_Amount:%09.2f\tDay:%06d\n" , from->a_id ,t->customer_id ,t->id, op_deposit , from->amount ,t->amount,simulation_day);
                     log_info("Before A_ID:%d C_ID:%d T_ID:%d Operation:%s Account_Amount:%f Amount:%f Simulation_Day:%d",from->a_id,t->customer_id,t->id,op_deposit,from->amount,t->amount , simulation_day);
                     t->nof_operation_performed++;
                     from->operation_count++;
@@ -418,7 +419,7 @@ void* teller(void* threadid){
                 if(from->operation_count<3  && simulation_day<nof_simulation_days) {
 
                     if (from->withdraw_total + t->amount < from->day_limit && t->amount<from->amount) {
-                        fprintf(log_output,"%d\t%d\t%d\t%s\t%.2f\t%d\n" , from->a_id ,t->customer_id ,t->id, op_withdraw , from->amount,simulation_day);
+                        fprintf(log_output,"A_ID:%06d\tC_ID:%06d\tT_ID:%06d\tOperation:%s\tA_Amount:%09.2f\tO_Amount:%09.2f\tDay:%06d\n" , from->a_id ,t->customer_id ,t->id, op_withdraw , from->amount ,t->amount,simulation_day);
                         log_info("Before A_ID:%d C_ID:%d T_ID:%d Operation:%s Account_Amount:%f Amount:%f Simulation_Day:%d",from->a_id,t->customer_id,t->id,op_withdraw,from->amount,t->amount,simulation_day);
                         from->amount = from->amount - t->amount;
                         from->withdraw_total += t->amount;
@@ -429,6 +430,7 @@ void* teller(void* threadid){
 
 
                     } else {
+                        fprintf(log_output,"A_ID:%06d\tC_ID:%06d\tT_ID:%06d\tOperation:%s\tA_Amount:%09.2f\tO_Amount:%09.2f\tDay:%06d\tLimit:%06d\tWD_T:%06f Error\n" , from->a_id ,t->customer_id ,t->id, op_withdraw , from->amount ,t->amount,simulation_day,from->day_limit,from->withdraw_total);
                         log_info("A_ID:%d C_ID:%d T_ID:%d Operation:%s-Error Account_Amount:%f Amount:%f Day_limit: %d Simulation_Day:%d",from->a_id,t->customer_id,t->id,op_withdraw,from->amount,t->amount,from->day_limit,simulation_day);
                     }
                 }
@@ -441,7 +443,7 @@ void* teller(void* threadid){
 
                     if (from->amount > t->amount) {
 
-                        fprintf(log_output,"%d\t%d\t%d\t%s\t%.2f\t%d\n" , from->a_id ,t->customer_id ,t->id, op_transfer ,from->amount ,simulation_day);
+                        fprintf(log_output,"A_ID:%06d\tC_ID:%06d\tT_ID:%06d\tOperation:%s\tA_Amount:%09.2f\tO_Amount:%09.2f\tDay:%06d\tTO_ID:%06d\n" , from->a_id ,t->customer_id ,t->id, op_transfer , from->amount ,t->amount,simulation_day,to->a_id);
                         log_info("Before A_ID:%d C_ID:%d T_ID:%d Operation:%s Account_Amount:%f Amount:%f Day:%d To: %d",
                                  from->a_id, t->customer_id, t->id, op_transfer, from->amount, t->amount,
                                  simulation_day,to->a_id);
@@ -457,6 +459,7 @@ void* teller(void* threadid){
 
 
                     } else {
+                        fprintf(log_output,"A_ID:%06d\tC_ID:%06d\tT_ID:%06d\tOperation:%s\tA_Amount:%09.2f\tO_Amount:%09.2f\tDay:%06d\tTO_ID:%06d Error\n" , from->a_id ,t->customer_id ,t->id, op_transfer , from->amount ,t->amount,simulation_day,to->a_id);
                         log_info(
                                 "A_ID:%d C_ID:%d T_ID:%d Operation:%s-Error Account_Amount:%f Amount:%f Day:%d To: %d",
                                 from->a_id, t->customer_id, t->id, op_transfer, from->amount, t->amount,
@@ -499,7 +502,7 @@ void set_account_operation_count_to_default(){
 void* clock_update(){
     while(1){
         clock_timestamp = (unsigned long) time(NULL);
-        if(clock_timestamp-past_timestamp > 9) {
+        if(clock_timestamp-past_timestamp > 1) {
             simulation_day++;
             log_info("simulation_day : %d" ,simulation_day);
             if(simulation_day<nof_simulation_days)
