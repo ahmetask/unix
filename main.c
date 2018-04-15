@@ -6,6 +6,12 @@
 #include <stdint.h>
 #include <time.h>
 #include <unistd.h>
+
+/*
+ * Ahmet Aşık 150113062
+ * Zeynel Özdemir 150113070
+ * Öykü Gümüş 150114035
+ * */
 //Account struct
 typedef struct Account {
     int a_id;
@@ -112,9 +118,16 @@ void read_file(){
 
     char *item;
     int count = 0;
+    char path[100];
 
-    input_file = fopen("input.txt","r");
+    printf("Enter file name:");
+    scanf("%s", path);
 
+    input_file = fopen(path,"r");
+    if(input_file == NULL){
+        printf("Wrong path or file name");
+        return;
+    }
     while (fgets(line,50,input_file)) {
         if(count>2) {
             Account account;
